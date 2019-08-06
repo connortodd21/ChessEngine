@@ -18,16 +18,14 @@ public class Board {
          */
         String board [][] = {
             {"r", "n", "b", "q", "k", "b", "n", "r"},
-            {"p", "p", "p", "p", "p", "p", "P", "p"},
+            {"p", "p", "p", "p", "p", "p", " ", "p"},
+            {" ", " ", " ", " ", " ", " ", " ", " "},
+            {" ", " ", " ", " ", " ", "P", "p", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
-            {" ", " ", " ", " ", " ", " ", " ", " "},
-            {" ", " ", "p", " ", "p", " ", " ", " "},
-            {"P", "P", "P", "P", "P", "P", "P", "P"},
+            {"P", "P", "P", "P", "P", " ", "P", "P"},
             {"R", "N", "B", "Q", "K", "B", "N", "R"}
         };
-        System.out.println(board[5][2]);
-        System.out.println(board[6][1]);
         generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
@@ -52,7 +50,7 @@ public class Board {
             }
         }
         MovePiece m = new MovePiece();
-        m.whitePossibleMoves("", WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+        m.whitePossibleMoves("1636,", WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
         generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
