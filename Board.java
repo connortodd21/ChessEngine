@@ -33,6 +33,8 @@ public class Board {
     }
 
     /*
+        Generates bitboards for all pieces given a board in any state of a game
+
         @param
         board:                         two-dimension array with the string representation of the current board in play
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
@@ -64,6 +66,8 @@ public class Board {
     }
 
     /*
+        Converts a binary string to long
+
         @param
         binary:         some binary string
 
@@ -78,6 +82,8 @@ public class Board {
     }
 
     /*
+        Prints out a command-line visual representation of a chess board given all 12 bitboards
+
         @param
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
         BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
@@ -132,6 +138,8 @@ public class Board {
     }
 
     /*
+        Prints a chess board in the correct format with white on bottom and a1 on the bottom legt
+
         @param
         board:      String representation of the current board in play
      */

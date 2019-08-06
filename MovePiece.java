@@ -6,6 +6,9 @@ public class MovePiece {
     static long OCCUPIED;
 
     /*
+        Returns all the possible moves that white can make, including captures
+        //TODO: include castling
+
         @param
         history:                       the move history of the current game
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
@@ -23,6 +26,8 @@ public class MovePiece {
     }
 
     /*
+        Returns all the possible moves that white pawns can make, including captures and en passant
+
         @param
         history:         move history of the current game
         WP:              bitboard for the white pawns on the board
