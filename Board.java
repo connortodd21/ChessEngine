@@ -8,8 +8,11 @@ import java.util.Arrays;
 
 public class Board {
 
+    /*
+        Initialize a new game with starting board
+     */
     public void initializeBoard() {
-        // initialize bitboards for all 12 pieces
+        // initialize empty bitboards for all 12 pieces
         long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L;
         /*
          initialize starting chess board.
@@ -29,6 +32,12 @@ public class Board {
         generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
+    /*
+        @param
+        board:                         two-dimension array with the string representation of the current board in play
+        WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
+        BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
+          */
     public void generateBitboards(String[][] board, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
         StringBuilder binary;
         for (int i = 0; i < 64; i++) {
@@ -54,14 +63,25 @@ public class Board {
         generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
-    public long binaryToLong(StringBuilder Binary) {
-        if (Binary.charAt(0) == '0') {//not going to be a negative number
-            return Long.parseLong(Binary.toString(), 2);
+    /*
+        @param
+        binary:         some binary string
+
+        @return         the long value of the binary string
+     */
+    public long binaryToLong(StringBuilder binary) {
+        if (binary.charAt(0) == '0') {//not going to be a negative number
+            return Long.parseLong(binary.toString(), 2);
         } else {
-            return Long.parseLong("1"+Binary.substring(2), 2)*2;
+            return Long.parseLong("1"+binary.substring(2), 2)*2;
         }
     }
 
+    /*
+        @param
+        WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
+        BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
+     */
     public void generateVisualBoard(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
         String[][] board = new String[8][8];
         for (int i = 0; i < 64; i++) {
@@ -69,7 +89,6 @@ public class Board {
         }
 
         long highOrderBit = 1L << 63;
-
 
         for (int i = 0; i < 64; i++) {
             if (((WP<<i) & highOrderBit) == highOrderBit) {
@@ -112,6 +131,10 @@ public class Board {
         printBoard(board);
     }
 
+    /*
+        @param
+        board:      String representation of the current board in play
+     */
     public void printBoard(String[][] board){
         for (int i = 0; i < 8; i++) {
             System.out.println(Arrays.toString(board[i]));

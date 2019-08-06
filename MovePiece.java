@@ -1,12 +1,18 @@
 public class MovePiece {
-    /* bitboards for different files, ranks, positions */
-    /* This is done for legibility, you can just use the raw long value instead */
-
+    /* Bitboards to indicate different game states */
     static long WHTIE_CAN_CAPTURE;
     static long BLACK_PIECE;
     static long EMPTY;
     static long OCCUPIED;
 
+    /*
+        @param
+        history:                       the move history of the current game
+        WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
+        BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
+
+        @return                        all possible moves and captures for white
+     */
     public String whitePossibleMoves(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
         WHTIE_CAN_CAPTURE = BP | BN | BB | BR | BQ ;
         //NOT_WHITE_PIECES=~(WP|WN|WB|WR|WQ|WK|BK);
@@ -16,6 +22,13 @@ public class MovePiece {
         return possibleMoves;
     }
 
+    /*
+        @param
+        history:         move history of the current game
+        WP:              bitboard for the white pawns on the board
+
+        @return          all of the possible moves, captures, and promotions including en passant
+     */
     public String WPPossibleMoves(String history, long WP){
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
         // CAPTURE RIGHT
