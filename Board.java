@@ -10,16 +10,16 @@ public class Board {
 
     public void initializeBoard() {
         // initialize bitboards for all 12 pieces
-        long WP = 0, WN = 0, WB = 0, WR = 0, WQ = 0, WK = 0, BP = 0, BN = 0, BB = 0, BR = 0, BQ = 0, BK = 0;
+        long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L;
         /*
          initialize starting chess board.
          black is lower case, white is upper case
          r/R = rook, n/N = knight, b/B = bishop, p/P = pawn, q/Q = queen, k/K = king
          */
         String board [][] = {
-            {"r", "n", "b", "q", "k", "b", "n", "r"},
+            {"r", " ", "b", "q", "k", "b", "n", "r"},
             {"p", "p", "p", "p", "p", "p", " ", "p"},
-            {" ", " ", " ", " ", " ", " ", " ", " "},
+            {"n", " ", " ", " ", " ", " ", " ", " "},
             {" ", " ", " ", " ", " ", "P", "p", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
@@ -54,7 +54,7 @@ public class Board {
         generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
-    private long binaryToLong(StringBuilder Binary) {
+    public long binaryToLong(StringBuilder Binary) {
         if (Binary.charAt(0) == '0') {//not going to be a negative number
             return Long.parseLong(Binary.toString(), 2);
         } else {
