@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /*
     Utility class with methods to make coding the engine easier for the programmer
  */
@@ -34,5 +36,31 @@ public class ChessUtilities {
         System.out.print(Long.toBinaryString(bitBoard));
         System.out.println();
         b.generateVisualBoard(bitBoard, 0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L);
+    }
+
+    public static void printBitboard(long bitboard) {
+        String[][] board = new String[8][8];
+        for (int i = 0; i < 64; i++) {
+            board[i / 8][i % 8] = " ";
+        }
+
+        long highOrderBit = 1L << 63;
+
+        for (int i = 0; i < 64; i++) {
+            if (((bitboard << i) & highOrderBit) == highOrderBit) {
+                board[i / 8][i % 8] = "1";
+            }
+        }
+        for (int i = 0; i < 8; i++) {
+            System.out.println(Arrays.toString(board[i]));
+        }
+        System.out.println();
+    }
+
+    public static void printEntireLongBinary(long value){
+        for (int i = 0; i < Long.numberOfLeadingZeros(value); i++) {
+            System.out.print('0');
+        }
+        System.out.println(Long.toBinaryString(value));
     }
 }
