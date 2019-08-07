@@ -20,13 +20,13 @@ public class Board {
          r/R = rook, n/N = knight, b/B = bishop, p/P = pawn, q/Q = queen, k/K = king
          */
         String board [][] = {
-            {"r", " ", "b", "q", "k", "b", "n", "r"},
-            {"p", "p", "p", "p", "p", "p", " ", "p"},
-            {"n", " ", " ", " ", " ", " ", " ", " "},
-            {" ", " ", " ", " ", " ", "P", "p", " "},
+            {"r", "n", "b", "q", "k", "b", "n", "r"},
+            {"p", "p", "p", "p", "p", "p", "p", "p"},
+            {" ", " ", " ", " ", " ", " ", " ", " "},
+            {" ", " ", " ", "Q", " ", " ", " ", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
             {" ", " ", " ", " ", " ", " ", " ", " "},
-            {"P", "P", "P", "P", "P", " ", "P", "P"},
+            {"P", "P", "P", "P", "P", "P", "P", "P"},
             {"R", "N", "B", "Q", "K", "B", "N", "R"}
         };
         generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
@@ -62,7 +62,7 @@ public class Board {
         }
         MovePiece m = new MovePiece();
         m.whitePossibleMoves("1636,", WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-        generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+//        generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
     /*

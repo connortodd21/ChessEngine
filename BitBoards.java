@@ -49,7 +49,7 @@ public class BitBoards {
     static long RANK_6=-new BigInteger(RANK_6_STRING, 2).longValue();
     static long RANK_7=-new BigInteger(RANK_7_STRING, 2).longValue();
     static long RANK_8=new BigInteger(RANK_8_STRING, 2).longValue();
-    // from rank 8 to rank 1
+    // from rank 1 to rank 8
     static long RANK_MASKS[] = { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8 };
 
     /* bitboards for all diagonals */
@@ -84,7 +84,7 @@ public class BitBoards {
     static long F8TOH6 = new BigInteger(F8TOH6_STRING, 2).longValue();
     static long G8TOH7 = new BigInteger(G8TOH7_STRING, 2).longValue();
     static long H8TOH8 = new BigInteger(H8TOH8_STRING, 2).longValue();
-    static long DIAGONAL_MASKS_RIGHT_TO_LEFT[] = { A1TOA1, A2TOB2, A3TOC3, A4TOD4, A5TOE5, A6TOF6, A7TOG7, A8TOH8,
+    static long DIAGONAL_MASKS_LEFT_TO_RIGHT[] = { A1TOA1, A2TOB2, A3TOC3, A4TOD4, A5TOE5, A6TOF6, A7TOG7, A8TOH8,
                                                    B8TOH2, C8TOH3, D8TOH4, E8TOH5, F8TOH6, G8TOH7, H8TOH8 };
 
     // TOP RIGHT TO BOTTOM LEFT (H8 -> A1)
@@ -118,6 +118,6 @@ public class BitBoards {
     static long F1TOH3 = new BigInteger(F1TOH3_STRING, 2).longValue();
     static long G1TOH2 = new BigInteger(G1TOH2_STRING, 2).longValue();
     static long H1TOH1 = new BigInteger(H1TOH1_STRING, 2).longValue();
-    static long DIAGONAL_MASKS_LEFT_TO_RIGHT[] = { A8TOA8, A7TOB8, A6TOC8, A5TOD8, A4TOE8, A3TOF8, A2TOG8, A1TOH8,
+    static long DIAGONAL_MASKS_RIGHT_TO_LEFT[] = { A8TOA8, A7TOB8, A6TOC8, A5TOD8, A4TOE8, A3TOF8, A2TOG8, A1TOH8,
                                                    B1TOH7, C1TOH6, D1TOH5, E1TOH4, F1TOH3, G1TOH2, H1TOH1 };
 }

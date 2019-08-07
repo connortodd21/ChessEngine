@@ -4,6 +4,30 @@ public class MovePiece {
     static long BLACK_PIECE;
     static long EMPTY;
     static long OCCUPIED;
+    /*
+        Returns a bitboard of all possible vertical and horizontal moves from the position specified
+
+        @param
+        index:          integer location of a piece on the board
+
+        @return         all possible vertical and horizontal moves and captures for the piece
+     */
+    static long HorizontalAndVerticalMoves(int piece){
+        piece = 64 - piece;
+        long pieceBitboard = 1L << piece;
+        // horizontal moves = (OCC - 2 * board) ^ (OCC' - 2 * board')'
+        long horizontalMoves = (OCCUPIED - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED) - 2 * Long.reverse(pieceBitboard));
+        // same as horizontal moves, just apply a mask to translate the row into a column
+        long verticalMoves = ((OCCUPIED & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]) - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]) - 2 * Long.reverse(pieceBitboard));
+        return (horizontalMoves & BitBoards.RANK_MASKS[(int) Math.floor((double) piece/8 + 1)-1]) | (verticalMoves & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]);
+    }
+
+    static long DiagonalLeftAndRightMoves(int piece){
+        long pieceBitboard = 1L << piece;
+        long possibilitiesDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
+        long possibilitiesAntiDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
+        return (possibilitiesDiagonal & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) | (possibilitiesAntiDiagonal & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]);
+    }
 
     /*
         Returns all the possible moves that white can make, including captures
@@ -21,6 +45,17 @@ public class MovePiece {
         //NOT_WHITE_PIECES=~(WP|WN|WB|WR|WQ|WK|BK);
         BLACK_PIECE = BP | BN | BB | BR | BQ | BK;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
+        OCCUPIED = ~EMPTY;
+//        for (int i = 0; i < Long.numberOfLeadingZeros(HorizontalAndVerticalMoves(28)); i++) {
+//            System.out.print("0");
+//        }
+//        System.out.println(Long.toBinaryString(HorizontalAndVerticalMoves(28)));
+//        for (int i = 0; i < Long.numberOfLeadingZeros(DiagonalLeftAndRightMoves(28)); i++) {
+//            System.out.print("0");
+//        }
+//        System.out.println(Long.toBinaryString(DiagonalLeftAndRightMoves(28)));
+        DiagonalLeftAndRightMoves(28);
+        ChessUtilities.printBitboard(HorizontalAndVerticalMoves(27));
         String possibleMoves = WPPossibleMoves(history, WP);
         return possibleMoves;
     }
