@@ -18,11 +18,22 @@ public class MovePiece {
         // horizontal moves = (OCC - 2 * board) ^ (OCC' - 2 * board')'
         long horizontalMoves = (OCCUPIED - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED) - 2 * Long.reverse(pieceBitboard));
         // same as horizontal moves, just apply a mask to translate the row into a column
-        long verticalMoves = ((OCCUPIED & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]) - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]) - 2 * Long.reverse(pieceBitboard));
-        return (horizontalMoves & BitBoards.RANK_MASKS[(int) Math.floor((double) piece/8 + 1)-1]) | (verticalMoves & BitBoards.FILE_MASKS[(piece % 8 -2 + 8) % 8 - 1]);
+        long verticalMoves = ((OCCUPIED & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]) - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]) - 2 * Long.reverse(pieceBitboard));
+        System.out.println(piece + " " + (Math.abs(piece % 8 - 7)));
+        ChessUtilities.printBitboard(verticalMoves);
+        return (horizontalMoves & BitBoards.RANK_MASKS[(int) Math.floor((double) piece/8 + 1)-1]) | (verticalMoves & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]);
     }
 
+    /*
+        Returns a bitboard of all possible diagonal moves from the position specified
+
+        @param
+        index:          integer location of a piece on the board
+
+        @return         all possible diagonal moves and captures for the piece
+     */
     static long DiagonalLeftAndRightMoves(int piece){
+        piece = 64 - piece;
         long pieceBitboard = 1L << piece;
         long possibilitiesDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
         long possibilitiesAntiDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
@@ -46,14 +57,6 @@ public class MovePiece {
         BLACK_PIECE = BP | BN | BB | BR | BQ | BK;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED = ~EMPTY;
-//        for (int i = 0; i < Long.numberOfLeadingZeros(HorizontalAndVerticalMoves(28)); i++) {
-//            System.out.print("0");
-//        }
-//        System.out.println(Long.toBinaryString(HorizontalAndVerticalMoves(28)));
-//        for (int i = 0; i < Long.numberOfLeadingZeros(DiagonalLeftAndRightMoves(28)); i++) {
-//            System.out.print("0");
-//        }
-//        System.out.println(Long.toBinaryString(DiagonalLeftAndRightMoves(28)));
         DiagonalLeftAndRightMoves(28);
         ChessUtilities.printBitboard(HorizontalAndVerticalMoves(27));
         String possibleMoves = WPPossibleMoves(history, WP);
