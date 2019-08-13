@@ -4,7 +4,5 @@ public class Engine {
         Board b = new Board();
         MovePiece m = new MovePiece();
         b.initializeBoard();
-        System.out.println();
-//        ChessUtilities.generateCustomBitboard();
     }
 }

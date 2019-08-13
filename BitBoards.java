@@ -31,6 +31,9 @@ public class BitBoards {
     static long H_FILE = new BigInteger(H_FILE_STRING, 2).longValue();
     // from A file to H file
     static long FILE_MASKS[] = { A_FILE, B_FILE, C_FILE, D_FILE, E_FILE, F_FILE, G_FILE, H_FILE };
+    // used for knight moves
+    static long FILE_AB = A_FILE | B_FILE;
+    static long FILE_GH = H_FILE | G_FILE;
 
     /* bitboards for all ranks */
     private static String RANK_8_STRING = "1111111100000000000000000000000000000000000000000000000000000000";
@@ -122,4 +125,8 @@ public class BitBoards {
     // Anti-diagonal
     static long DIAGONAL_MASKS_RIGHT_TO_LEFT[] = { A8TOA8, A7TOB8, A6TOC8, A5TOD8, A4TOE8, A3TOF8, A2TOG8, A1TOH8,
                                                    B1TOH7, C1TOH6, D1TOH5, E1TOH4, F1TOH3, G1TOH2, H1TOH1 };
+
+    /* bitboard representing all the possible knight moves from f3 */
+    private static String KNIGHT_SPACES_STRING = "0000000000000000000000000000101000010001000000000001000100001010";
+    static long KNIGHT_SPACES = new BigInteger(KNIGHT_SPACES_STRING, 2).longValue();
 }
