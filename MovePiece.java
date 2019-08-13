@@ -1,6 +1,6 @@
 public class MovePiece {
     /* Bitboards to indicate different game states */
-    static long WHTIE_CAN_CAPTURE;
+    static long WHTIE_CAN_MOVE;
     static long BLACK_PIECE;
     static long EMPTY;
     static long OCCUPIED;
@@ -54,17 +54,15 @@ public class MovePiece {
         @return                        all possible moves and captures for white
      */
     public String whitePossibleMoves(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
-        WHTIE_CAN_CAPTURE = BP | BN | BB | BR | BQ ;
-        //NOT_WHITE_PIECES=~(WP|WN|WB|WR|WQ|WK|BK);
+        WHTIE_CAN_MOVE = ~(WP|WN|WB|WR|WQ|WK|BK);
         BLACK_PIECE = BP | BN | BB | BR | BQ | BK;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED = ~EMPTY;
-        for (int i = 1; i <= 64; i++) {
-            ChessUtilities.printBitboard(HorizontalAndVerticalMoves(i));
-        }
-        String possibleMoves = WPPossibleMoves(history, WP);
-//        DiagonalLeftAndRightMoves(62);
-        return possibleMoves;
+        StringBuilder possibleMoves = new StringBuilder();
+        possibleMoves.append(WPPossibleMoves(history, WP));
+        possibleMoves.append(WBPossibleMoves(WB));
+        System.out.println(possibleMoves.toString());
+        return possibleMoves.toString();
     }
 
     /*
@@ -186,7 +184,29 @@ public class MovePiece {
                 }
             }
         }
-        System.out.println(list);
+        return list.toString();
+    }
+
+    public String WBPossibleMoves(long WB){
+        StringBuilder list = new StringBuilder();
+        long i = WB & -WB; //find bishops
+        long possibleMove;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = DiagonalLeftAndRightMoves(boardIndex) & WHTIE_CAN_MOVE;
+            long j = possibleMove & -possibleMove;
+            ChessUtilities.printBitboard(possibleMove);
+            while (j != 0)
+            {
+                int index = Long.numberOfLeadingZeros(j);
+                list.append(((boardIndex-1)/8)+""+((boardIndex-1)%8)+""+((index)/8)+""+((index)%8)+",");
+                possibleMove &= ~j;
+                j = possibleMove & - possibleMove;
+            }
+            WB &= ~i;
+            i = WB & - WB;
+        }
         return list.toString();
     }
 }
