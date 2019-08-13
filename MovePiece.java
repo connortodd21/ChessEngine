@@ -49,12 +49,12 @@ public class MovePiece {
         OCCUPIED = ~EMPTY;
         StringBuilder possibleMoves = new StringBuilder();
         possibleMoves.append(BPPossibleMoves(BP, EP, WP));
-//        possibleMoves.append(BPossibleMoves(BB));
-//        possibleMoves.append(RPossibleMoves(BR));
-//        possibleMoves.append(QPossibleMoves(BQ));
-//        possibleMoves.append(NPossibleMoves(BN));
-//        possibleMoves.append(KPossibleMoves(BK));
-//        possibleMoves.append(WKCastle(BR, BQC, BKC));
+        possibleMoves.append(BPossibleMoves(BB));
+        possibleMoves.append(RPossibleMoves(BR));
+        possibleMoves.append(QPossibleMoves(BQ));
+        possibleMoves.append(NPossibleMoves(BN));
+        possibleMoves.append(KPossibleMoves(BK));
+        possibleMoves.append(BKCastle(BR, BQC, BKC));
         System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
@@ -220,11 +220,9 @@ public class MovePiece {
         }
         // PROMOTE BY CAPTURE LEFT
         possibleMove = (BP >> 9) & ENEMY_PIECES & BitBoards.RANK_1 & ~BitBoards.A_FILE;
-        ChessUtilities.printBitboard(possibleMove);
         singleMove = possibleMove & -possibleMove;
         while (singleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(singleMove);
-            System.out.println(i);
             list.append(Math.abs((i-2)%8)+""+(i-1)%8+"QP,"+Math.abs((i-2)%8)+""+(i-1)%8+"RP,"+Math.abs((i-2)%8)+""+(i-1)%8+"BP,"+Math.abs((i-2)%8)+""+(i-1)%8+"NP,");
             possibleMove = possibleMove & ~singleMove;
             singleMove = possibleMove & -possibleMove;
