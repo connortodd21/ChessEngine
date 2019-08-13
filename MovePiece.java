@@ -61,6 +61,8 @@ public class MovePiece {
         StringBuilder possibleMoves = new StringBuilder();
         possibleMoves.append(WPPossibleMoves(history, WP));
         possibleMoves.append(WBPossibleMoves(WB));
+        possibleMoves.append(WRPossibleMoves(WR));
+        possibleMoves.append(WQPossibleMoves(WQ));
         System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
@@ -72,7 +74,7 @@ public class MovePiece {
         history:         move history of the current game
         WP:              bitboard for the white pawns on the board
 
-        @return          all of the possible moves, captures, and promotions including en passant
+        @return          string list of all of the possible moves, captures, and promotions including en passant
      */
     public String WPPossibleMoves(String history, long WP){
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
@@ -187,6 +189,14 @@ public class MovePiece {
         return list.toString();
     }
 
+    /*
+        Returns all the possible moves that white bishops can make, including captures
+
+        @param
+        WP:              bitboard for the white bishops on the board
+
+        @return          string list of all of the possible moves and captures
+     */
     public String WBPossibleMoves(long WB){
         StringBuilder list = new StringBuilder();
         long i = WB & -WB; //find bishops
@@ -196,17 +206,71 @@ public class MovePiece {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = DiagonalLeftAndRightMoves(boardIndex) & WHTIE_CAN_MOVE;
             long j = possibleMove & -possibleMove;
-            ChessUtilities.printBitboard(possibleMove);
-            while (j != 0)
-            {
-                int index = Long.numberOfLeadingZeros(j);
-                list.append(((boardIndex-1)/8)+""+((boardIndex-1)%8)+""+((index)/8)+""+((index)%8)+",");
-                possibleMove &= ~j;
-                j = possibleMove & - possibleMove;
-            }
+            calculateMove(list, possibleMove, boardIndex, j);
             WB &= ~i;
             i = WB & - WB;
         }
         return list.toString();
+    }
+
+    /*
+        Returns all the possible moves that white rooks can make, including captures
+
+        @param
+        WP:              bitboard for the white rooks on the board
+
+        @return          string list of all of the possible moves and captures
+     */
+    public String WRPossibleMoves(long WR){
+        StringBuilder list = new StringBuilder();
+        long i = WR & -WR; //find rooks
+        long possibleMove;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = HorizontalAndVerticalMoves(boardIndex) & WHTIE_CAN_MOVE;
+            long j = possibleMove & -possibleMove;
+            calculateMove(list, possibleMove, boardIndex, j);
+            WR &= ~i;
+            i = WR & - WR;
+        }
+        return list.toString();
+    }
+    /*
+        Returns all the possible moves that white queens can make, including captures
+
+        @param
+        WP:              bitboard for the white queens on the board
+
+        @return          string list of all of the possible moves and captures
+    */
+    public String WQPossibleMoves(long WQ){
+        StringBuilder list = new StringBuilder();
+        long i = WQ & -WQ; //find queens
+        long possibleMove;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = (HorizontalAndVerticalMoves(boardIndex) | DiagonalLeftAndRightMoves(boardIndex)) & WHTIE_CAN_MOVE;
+            long j = possibleMove & -possibleMove;
+            calculateMove(list, possibleMove, boardIndex, j);
+            WQ &= ~i;
+            i = WQ & - WQ;
+        }
+        return list.toString();
+    }
+
+
+    /*
+        Helper method for the finding moves methods.
+     */
+    private void calculateMove(StringBuilder list, long possibleMove, int boardIndex, long j) {
+        while (j != 0)
+        {
+            int index = Long.numberOfLeadingZeros(j);
+            list.append(((boardIndex-1)/8)+""+((boardIndex-1)%8)+""+((index)/8)+""+((index)%8)+",");
+            possibleMove &= ~j;
+            j = possibleMove & - possibleMove;
+        }
     }
 }
