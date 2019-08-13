@@ -59,13 +59,14 @@ public class MovePiece {
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED = ~EMPTY;
         StringBuilder possibleMoves = new StringBuilder();
-        possibleMoves.append(WPPossibleMoves(history, WP));
-        possibleMoves.append(WBPossibleMoves(WB));
-        possibleMoves.append(WRPossibleMoves(WR));
-        possibleMoves.append(WQPossibleMoves(WQ));
-        possibleMoves.append(WNPossibleMoves(WN));
-        possibleMoves.append(WKPossibleMoves(WK));
-        System.out.println(possibleMoves.toString());
+//        possibleMoves.append(WPPossibleMoves(history, WP));
+//        possibleMoves.append(WBPossibleMoves(WB));
+//        possibleMoves.append(WRPossibleMoves(WR));
+//        possibleMoves.append(WQPossibleMoves(WQ));
+//        possibleMoves.append(WNPossibleMoves(WN));
+//        possibleMoves.append(WKPossibleMoves(WK));
+//        System.out.println(possibleMoves.toString());
+        ChessUtilities.printBitboard(unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
         return possibleMoves.toString();
     }
 
@@ -220,7 +221,7 @@ public class MovePiece {
                 possibleMove &= ~BitBoards.FILE_AB & WHTIE_CAN_MOVE;
             }
             long j = possibleMove & -possibleMove;
-            calculateMove(list, possibleMove, boardIndex, j);
+            addMovesToList(list, possibleMove, boardIndex, j);
             WN &= ~i;
             i = WN & -WN;
         }
@@ -244,7 +245,7 @@ public class MovePiece {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = DiagonalLeftAndRightMoves(boardIndex) & WHTIE_CAN_MOVE;
             long j = possibleMove & -possibleMove;
-            calculateMove(list, possibleMove, boardIndex, j);
+            addMovesToList(list, possibleMove, boardIndex, j);
             WB &= ~i;
             i = WB & - WB;
         }
@@ -268,7 +269,7 @@ public class MovePiece {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = HorizontalAndVerticalMoves(boardIndex) & WHTIE_CAN_MOVE;
             long j = possibleMove & -possibleMove;
-            calculateMove(list, possibleMove, boardIndex, j);
+            addMovesToList(list, possibleMove, boardIndex, j);
             WR &= ~i;
             i = WR & - WR;
         }
@@ -291,7 +292,7 @@ public class MovePiece {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = (HorizontalAndVerticalMoves(boardIndex) | DiagonalLeftAndRightMoves(boardIndex)) & WHTIE_CAN_MOVE;
             long j = possibleMove & -possibleMove;
-            calculateMove(list, possibleMove, boardIndex, j);
+            addMovesToList(list, possibleMove, boardIndex, j);
             WQ &= ~i;
             i = WQ & - WQ;
         }
@@ -309,7 +310,7 @@ public class MovePiece {
     public String WKPossibleMoves(long WK){
         StringBuilder list = new StringBuilder();
         long i = WK & -WK; //find king
-        long possibleMove;
+        long possibleMove = 0;
         while(i != 0)
         {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
@@ -327,7 +328,7 @@ public class MovePiece {
                 possibleMove &= ~BitBoards.FILE_AB & WHTIE_CAN_MOVE;
             }
             long j = possibleMove & -possibleMove;
-            calculateMove(list, possibleMove, boardIndex, j);
+            addMovesToList(list, possibleMove, boardIndex, j);
             WK &= ~i;
             i = WK & -WK;
         }
@@ -335,9 +336,88 @@ public class MovePiece {
     }
 
     /*
+    returns all of the squares that white is attacking/can move to
+     */
+    public long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+        long unsafe;
+        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
+
+        // white pawn unsafe squares
+        unsafe = ((WP << 7) & ~BitBoards.A_FILE) | ((WP << 9) & ~BitBoards.H_FILE);
+
+
+
+        long possibleMove;
+        // white knight unsafe squares
+        long i = WN & -WN;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
+            if (boardIndex > 46){
+                possibleMove = BitBoards.KNIGHT_SPACES >> (boardIndex - 46);
+            }
+            else {
+                possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
+            }
+            if (boardIndex % 8 < 4){
+                possibleMove &= ~BitBoards.FILE_GH;
+            }
+            else {
+                possibleMove &= ~BitBoards.FILE_AB;
+            }
+            unsafe |= possibleMove;
+            WN &= ~i;
+            i = WN & -WN;
+        }
+
+        // white bishop/queen (diagonal) unsafe squares
+        long WBQ = WB | WQ;
+        i = WBQ & -WBQ;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = DiagonalLeftAndRightMoves(boardIndex);
+            unsafe |= possibleMove;
+            WBQ &= ~i;
+            i = WBQ & - WBQ;
+        }
+
+        // white rook/queen (vertical + horizontal) unsafe squares
+        long WRQ = WR | WQ;
+        i = WRQ & -WRQ; //find rooks
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = HorizontalAndVerticalMoves(boardIndex);
+            unsafe |= possibleMove;
+            WRQ &= ~i;
+            i = WRQ & - WRQ;
+        }
+
+        // white king unsafe squares
+        int boardIndex = 64 - Long.numberOfTrailingZeros(WK);
+        // I check 55 because the KING_SPACES static is the possible king moves on g2, which is position 55 on the bitboard
+        if (boardIndex > 55){
+            possibleMove = BitBoards.KING_SPACES >> (boardIndex - 55);
+        }
+        else {
+            possibleMove = BitBoards.KING_SPACES << (55 - boardIndex);
+        }
+        if (boardIndex % 8 < 4){
+            possibleMove &= ~BitBoards.FILE_GH;
+        }
+        else {
+            possibleMove &= ~BitBoards.FILE_AB;
+        }
+        unsafe |= possibleMove;
+        return unsafe;
+    }
+
+    /*
         Helper method for the finding moves methods.
      */
-    private void calculateMove(StringBuilder list, long possibleMove, int boardIndex, long j) {
+    private void addMovesToList(StringBuilder list, long possibleMove, int boardIndex, long j) {
         while (j != 0)
         {
             int index = Long.numberOfLeadingZeros(j);
