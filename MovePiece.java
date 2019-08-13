@@ -12,16 +12,16 @@ public class MovePiece {
 
         @return         all possible vertical and horizontal moves and captures for the piece
      */
-    static long HorizontalAndVerticalMoves(int piece){
-        piece = 64 - piece;
-        long pieceBitboard = 1L << piece;
+
+    static long HorizontalAndVerticalMoves(int piece)
+    {
+        piece = 64-piece;
+        long pieceBitboard=1L<<piece;
         // horizontal moves = (OCC - 2 * board) ^ (OCC' - 2 * board')'
         long horizontalMoves = (OCCUPIED - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED) - 2 * Long.reverse(pieceBitboard));
         // same as horizontal moves, just apply a mask to translate the row into a column
-        long verticalMoves = ((OCCUPIED & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]) - 2 * pieceBitboard) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]) - 2 * Long.reverse(pieceBitboard));
-        System.out.println(piece + " " + (Math.abs(piece % 8 - 7)));
-        ChessUtilities.printBitboard(verticalMoves);
-        return (horizontalMoves & BitBoards.RANK_MASKS[(int) Math.floor((double) piece/8 + 1)-1]) | (verticalMoves & BitBoards.FILE_MASKS[Math.abs(piece % 8 - 7)]);
+        long verticalMoves = ((OCCUPIED & BitBoards.FILE_MASKS[7-(piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.FILE_MASKS[7-(piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
+        return (horizontalMoves & BitBoards.RANK_MASKS[(piece / 8)]) | (verticalMoves & BitBoards.FILE_MASKS[7-(piece % 8)]);
     }
 
     /*
@@ -32,12 +32,14 @@ public class MovePiece {
 
         @return         all possible diagonal moves and captures for the piece
      */
-    static long DiagonalLeftAndRightMoves(int piece){
-        piece = 64 - piece;
+
+    static long DiagonalLeftAndRightMoves(int piece)
+    {
+        piece = 64-piece;
         long pieceBitboard = 1L << piece;
-        long possibilitiesDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
-        long possibilitiesAntiDiagonal = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
-        return (possibilitiesDiagonal & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + (piece % 8)]) | (possibilitiesAntiDiagonal & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[(piece / 8) + 7 - (piece % 8)]);
+        long diagonalMoves = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + 7 - (piece % 8)]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + 7 - (piece % 8)]) - (2 * Long.reverse(pieceBitboard)));
+        long antiDiagonalMoves = ((OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[14 - ((piece / 8) + (piece % 8))]) - (2 * pieceBitboard)) ^ Long.reverse(Long.reverse(OCCUPIED & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[14 - ((piece / 8) + (piece % 8))]) - (2 * Long.reverse(pieceBitboard)));
+        return (diagonalMoves & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + 7 - (piece % 8)]) | (antiDiagonalMoves & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[14 - ((piece / 8) + (piece % 8))]);
     }
 
     /*
@@ -57,9 +59,11 @@ public class MovePiece {
         BLACK_PIECE = BP | BN | BB | BR | BQ | BK;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED = ~EMPTY;
-        DiagonalLeftAndRightMoves(28);
-        ChessUtilities.printBitboard(HorizontalAndVerticalMoves(27));
+        for (int i = 1; i <= 64; i++) {
+            ChessUtilities.printBitboard(HorizontalAndVerticalMoves(i));
+        }
         String possibleMoves = WPPossibleMoves(history, WP);
+//        DiagonalLeftAndRightMoves(62);
         return possibleMoves;
     }
 

@@ -41,14 +41,14 @@ public class BitBoards {
     private static String RANK_3_STRING = "0000000000000000000000000000000000000000111111110000000000000000";
     private static String RANK_2_STRING = "0000000000000000000000000000000000000000000000001111111100000000";
     private static String RANK_1_STRING = "0000000000000000000000000000000000000000000000000000000011111111";
-    static long RANK_1=-new BigInteger(RANK_1_STRING, 2).longValue();
-    static long RANK_2=-new BigInteger(RANK_2_STRING, 2).longValue();
-    static long RANK_3=-new BigInteger(RANK_3_STRING, 2).longValue();
-    static long RANK_4=new BigInteger(RANK_4_STRING, 2).longValue();
-    static long RANK_5=new BigInteger(RANK_5_STRING, 2).longValue();
-    static long RANK_6=-new BigInteger(RANK_6_STRING, 2).longValue();
-    static long RANK_7=-new BigInteger(RANK_7_STRING, 2).longValue();
-    static long RANK_8=new BigInteger(RANK_8_STRING, 2).longValue();
+    static long RANK_1 = new BigInteger(RANK_1_STRING, 2).longValue();
+    static long RANK_2 = new BigInteger(RANK_2_STRING, 2).longValue();
+    static long RANK_3 = new BigInteger(RANK_3_STRING, 2).longValue();
+    static long RANK_4 = new BigInteger(RANK_4_STRING, 2).longValue();
+    static long RANK_5 = new BigInteger(RANK_5_STRING, 2).longValue();
+    static long RANK_6 = new BigInteger(RANK_6_STRING, 2).longValue();
+    static long RANK_7 = new BigInteger(RANK_7_STRING, 2).longValue();
+    static long RANK_8 = new BigInteger(RANK_8_STRING, 2).longValue();
     // from rank 1 to rank 8
     static long RANK_MASKS[] = { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8 };
 
@@ -70,13 +70,13 @@ public class BitBoards {
     private static String G8TOH7_STRING = "0000001000000001000000000000000000000000000000000000000000000000";
     private static String H8TOH8_STRING = "0000000100000000000000000000000000000000000000000000000000000000";
     static long A1TOA1 = new BigInteger(A1TOA1_STRING, 2).longValue();
-    static long A2TOB2 = new BigInteger(A2TOB1_STRING, 2).longValue();
-    static long A3TOC3 = new BigInteger(A3TOC1_STRING, 2).longValue();
-    static long A4TOD4 = new BigInteger(A4TOD1_STRING, 2).longValue();
-    static long A5TOE5 = new BigInteger(A5TOE1_STRING, 2).longValue();
-    static long A6TOF6 = new BigInteger(A6TOF1_STRING, 2).longValue();
-    static long A7TOG7 = new BigInteger(A7TOG1_STRING, 2).longValue();
-    static long A8TOH8 = new BigInteger(A8TOH1_STRING, 2).longValue();
+    static long A2TOB1 = new BigInteger(A2TOB1_STRING, 2).longValue();
+    static long A3TOC1 = new BigInteger(A3TOC1_STRING, 2).longValue();
+    static long A4TOD1 = new BigInteger(A4TOD1_STRING, 2).longValue();
+    static long A5TOE1 = new BigInteger(A5TOE1_STRING, 2).longValue();
+    static long A6TOF1 = new BigInteger(A6TOF1_STRING, 2).longValue();
+    static long A7TOG1 = new BigInteger(A7TOG1_STRING, 2).longValue();
+    static long A8TOH1 = new BigInteger(A8TOH1_STRING, 2).longValue();
     static long B8TOH2 = new BigInteger(B8TOH2_STRING, 2).longValue();
     static long C8TOH3 = new BigInteger(C8TOH3_STRING, 2).longValue();
     static long D8TOH4 = new BigInteger(D8TOH4_STRING, 2).longValue();
@@ -84,7 +84,8 @@ public class BitBoards {
     static long F8TOH6 = new BigInteger(F8TOH6_STRING, 2).longValue();
     static long G8TOH7 = new BigInteger(G8TOH7_STRING, 2).longValue();
     static long H8TOH8 = new BigInteger(H8TOH8_STRING, 2).longValue();
-    static long DIAGONAL_MASKS_LEFT_TO_RIGHT[] = { A1TOA1, A2TOB2, A3TOC3, A4TOD4, A5TOE5, A6TOF6, A7TOG7, A8TOH8,
+    // Diagonal
+    static long DIAGONAL_MASKS_LEFT_TO_RIGHT[] = { A1TOA1, A2TOB1, A3TOC1, A4TOD1, A5TOE1, A6TOF1, A7TOG1, A8TOH1,
                                                    B8TOH2, C8TOH3, D8TOH4, E8TOH5, F8TOH6, G8TOH7, H8TOH8 };
 
     // TOP RIGHT TO BOTTOM LEFT (H8 -> A1)
@@ -118,6 +119,7 @@ public class BitBoards {
     static long F1TOH3 = new BigInteger(F1TOH3_STRING, 2).longValue();
     static long G1TOH2 = new BigInteger(G1TOH2_STRING, 2).longValue();
     static long H1TOH1 = new BigInteger(H1TOH1_STRING, 2).longValue();
+    // Anti-diagonal
     static long DIAGONAL_MASKS_RIGHT_TO_LEFT[] = { A8TOA8, A7TOB8, A6TOC8, A5TOD8, A4TOE8, A3TOF8, A2TOG8, A1TOH8,
                                                    B1TOH7, C1TOH6, D1TOH5, E1TOH4, F1TOH3, G1TOH2, H1TOH1 };
 }
