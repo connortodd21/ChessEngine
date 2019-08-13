@@ -129,4 +129,8 @@ public class BitBoards {
     /* bitboard representing all the possible knight moves from f3 */
     private static String KNIGHT_SPACES_STRING = "0000000000000000000000000000101000010001000000000001000100001010";
     static long KNIGHT_SPACES = new BigInteger(KNIGHT_SPACES_STRING, 2).longValue();
+
+    /* bitboard representing all the possible knight moves from g2 */
+    private static String KING_SPACES_STRING = "0000000000000000000000000000000000000000000001110000010100000111";
+    static long KING_SPACES = new BigInteger(KING_SPACES_STRING, 2).longValue();
 }

@@ -64,6 +64,7 @@ public class MovePiece {
         possibleMoves.append(WRPossibleMoves(WR));
         possibleMoves.append(WQPossibleMoves(WQ));
         possibleMoves.append(WNPossibleMoves(WN));
+        possibleMoves.append(WKPossibleMoves(WK));
         System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
@@ -191,6 +192,42 @@ public class MovePiece {
     }
 
     /*
+        Returns all the possible moves that white knights can make, including captures
+
+        @param
+        WN:              bitboard for the white knights on the board
+
+        @return          string list of all of the possible moves and captures
+    */
+    public String WNPossibleMoves(long WN){
+        StringBuilder list = new StringBuilder();
+        long i = WN & -WN; //find knights
+        long possibleMove;
+        while(i != 0)
+        {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
+            if (boardIndex > 46){
+                possibleMove = BitBoards.KNIGHT_SPACES >> (boardIndex - 46);
+            }
+            else {
+                possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
+            }
+            if (boardIndex % 8 < 4){
+                possibleMove &= ~BitBoards.FILE_GH & WHTIE_CAN_MOVE;
+            }
+            else {
+                possibleMove &= ~BitBoards.FILE_AB & WHTIE_CAN_MOVE;
+            }
+            long j = possibleMove & -possibleMove;
+            calculateMove(list, possibleMove, boardIndex, j);
+            WN &= ~i;
+            i = WN & -WN;
+        }
+        return list.toString();
+    }
+
+    /*
         Returns all the possible moves that white bishops can make, including captures
 
         @param
@@ -269,19 +306,19 @@ public class MovePiece {
 
         @return          string list of all of the possible moves and captures
     */
-    public String WNPossibleMoves(long WN){
+    public String WKPossibleMoves(long WK){
         StringBuilder list = new StringBuilder();
-        long i = WN & -WN; //find knights
+        long i = WK & -WK; //find king
         long possibleMove;
         while(i != 0)
         {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
-            if (boardIndex > 46){
-                possibleMove = BitBoards.KNIGHT_SPACES >> (boardIndex - 46);
+            if (boardIndex > 55){
+                possibleMove = BitBoards.KING_SPACES >> (boardIndex - 55);
             }
             else {
-                possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
+                possibleMove = BitBoards.KING_SPACES << (55 - boardIndex);
             }
             if (boardIndex % 8 < 4){
                 possibleMove &= ~BitBoards.FILE_GH & WHTIE_CAN_MOVE;
@@ -291,8 +328,8 @@ public class MovePiece {
             }
             long j = possibleMove & -possibleMove;
             calculateMove(list, possibleMove, boardIndex, j);
-            WN &= ~i;
-            i = WN & -WN;
+            WK &= ~i;
+            i = WK & -WK;
         }
         return list.toString();
     }
