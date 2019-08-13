@@ -53,20 +53,20 @@ public class MovePiece {
 
         @return                        all possible moves and captures for white
      */
-    public String whitePossibleMoves(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+    public String whitePossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC){
         WHTIE_CAN_MOVE = ~(WP|WN|WB|WR|WQ|WK|BK);
         BLACK_PIECE = BP | BN | BB | BR | BQ | BK;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED = ~EMPTY;
         StringBuilder possibleMoves = new StringBuilder();
-//        possibleMoves.append(WPPossibleMoves(history, WP));
-//        possibleMoves.append(WBPossibleMoves(WB));
-//        possibleMoves.append(WRPossibleMoves(WR));
-//        possibleMoves.append(WQPossibleMoves(WQ));
-//        possibleMoves.append(WNPossibleMoves(WN));
-//        possibleMoves.append(WKPossibleMoves(WK));
-//        System.out.println(possibleMoves.toString());
-        ChessUtilities.printBitboard(unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+        possibleMoves.append(WPPossibleMoves(WP, EP, BP));
+        possibleMoves.append(WBPossibleMoves(WB));
+        possibleMoves.append(WRPossibleMoves(WR));
+        possibleMoves.append(WQPossibleMoves(WQ));
+        possibleMoves.append(WNPossibleMoves(WN));
+        possibleMoves.append(WKPossibleMoves(WK));
+        possibleMoves.append(WKCastle(WR, WQC, WKC));
+        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
 
@@ -79,7 +79,7 @@ public class MovePiece {
 
         @return          string list of all of the possible moves, captures, and promotions including en passant
      */
-    public String WPPossibleMoves(String history, long WP){
+    public String WPPossibleMoves(long WP, long EP, long BP){
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
         // CAPTURE RIGHT
         // Shifting the pawn over by 7 on the bitboard results in the square diagonal to the right of the pawn (i.e. the square to capture to the right)
@@ -165,29 +165,17 @@ public class MovePiece {
         }
         // EN PASSANT
         // en passant moves are stored as <old x> <new x> <EN>
-        if (history.length() >= 5){
-            // history is stored as comma separated list, so here just grab the substring to ignore the comma
-            String newHistory = history.substring(history.length()-5, history.length()-1);
-            // if a pawn was moved up the board by two squares (just check the x
-            if (newHistory.charAt(newHistory.length()-1) == newHistory.charAt(newHistory.length()-3) && Math.abs(newHistory.charAt(newHistory.length()-2)) - Math.abs(newHistory.charAt(newHistory.length()-4)) == 2){
-                // grab the destination file on which the opposing pawn is located (we want to capture diagonally to this file)
-                int pawnFile = newHistory.charAt(newHistory.length()-1) - '0';
-                // EN PASSANT RIGHT
-                // We already know that we have a situation where en passant is possible given the previous move in the history
-                // So we want to check that there is a black piece on the 5th rank (where a black pawn would be after a forward push by two)
-                // This bit operation will show the piece to remove, NOT the destination for the white pawn
-                long enPassantPossibleMove = (WP >> 1) & BLACK_PIECE & BitBoards.RANK_5 & ~BitBoards.A_FILE & BitBoards.FILE_MASKS[pawnFile];
-                if (enPassantPossibleMove != 0){
-                    int i = 64 - Long.numberOfTrailingZeros(enPassantPossibleMove);
-                    list.append((i%8)-1 + "" + i/8 + "EN");
-                }
-                // EN PASSANT LEFT
-                enPassantPossibleMove = (WP << 1) & BLACK_PIECE & BitBoards.RANK_5 & ~BitBoards.A_FILE & BitBoards.FILE_MASKS[pawnFile];
-                if (enPassantPossibleMove != 0){
-                    int i = 64 - Long.numberOfTrailingZeros(enPassantPossibleMove);
-                    list.append((i%8)+1 + "" + i/8 + "EN");
-                }
-            }
+        // capture right
+        possibleMove =(WP >> 1) & BP & BitBoards.RANK_5 & ~BitBoards.A_FILE & EP;
+        if (possibleMove != 0){
+            int i = 64 - Long.numberOfTrailingZeros(possibleMove);
+            list.append((i%8)-1 + "" + i/8 + "EN");
+        }
+        // capture left
+        possibleMove =(WP << 1) & BP & BitBoards.RANK_5 & ~BitBoards.H_FILE & EP;
+        if (possibleMove != 0){
+            int i = 64 - Long.numberOfTrailingZeros(possibleMove);
+            list.append((i%8)+1 + "" + i/8 + "EN");
         }
         return list.toString();
     }
@@ -335,6 +323,28 @@ public class MovePiece {
         return list.toString();
     }
 
+    public String WKCastle(long WR, boolean WQC, boolean WKC){
+        StringBuilder list = new StringBuilder();
+        if (WKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[0]) & WR) != 0){
+            list.append("7476,");
+        }
+        if (WQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[1]) & WR) != 0){
+            list.append("7472,");
+        }
+        return list.toString();
+    }
+
+    public String BKCastle(long BR, boolean BQC, boolean BKC){
+        StringBuilder list = new StringBuilder();
+        if (BKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[2]) & BR) != 0){
+            list.append("0406,");
+        }
+        if (BQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[3]) & BR) != 0){
+            list.append("0402,");
+        }
+        return list.toString();
+    }
+
     /*
     returns all of the squares that white is attacking/can move to
      */
@@ -344,8 +354,6 @@ public class MovePiece {
 
         // white pawn unsafe squares
         unsafe = ((WP << 7) & ~BitBoards.A_FILE) | ((WP << 9) & ~BitBoards.H_FILE);
-
-
 
         long possibleMove;
         // white knight unsafe squares

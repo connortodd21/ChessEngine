@@ -13,7 +13,8 @@ public class Board {
      */
     public void initializeBoard() {
         // initialize empty bitboards for all 12 pieces
-        long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L;
+        long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP=0L;
+        boolean WQC = true, WKC = true, BQC = true, BKC = true;
         /*
          initialize starting chess board.
          black is lower case, white is upper case
@@ -29,7 +30,7 @@ public class Board {
             {"P", "P", "P", "P", "P", "P", "P", "P"},
             {"R", "N", "B", "Q", "K", "B", "N", "R"}
         };
-        generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+        generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, true, true, true, true);
     }
 
     /*
@@ -40,7 +41,7 @@ public class Board {
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
         BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
           */
-    public void generateBitboards(String[][] board, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
+    public void generateBitboards(String[][] board, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC){
         StringBuilder binary;
         for (int i = 0; i < 64; i++) {
             binary = new StringBuilder("0000000000000000000000000000000000000000000000000000000000000000");
@@ -61,7 +62,7 @@ public class Board {
             }
         }
         MovePiece m = new MovePiece();
-        m.whitePossibleMoves("1636,", WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+        m.whitePossibleMoves("1636,", WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC);
 //        generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 

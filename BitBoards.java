@@ -134,4 +134,7 @@ public class BitBoards {
     /* bitboard representing all the possible king moves from g2 */
     private static String KING_SPACES_STRING = "0000000000000000000000000000000000000000000001110000010100000111";
     static long KING_SPACES = new BigInteger(KING_SPACES_STRING, 2).longValue();
+
+    /* starting locations for the 4 rooks */
+    static long ROOK_STARTING_LOCATIONS[] = {0,7,56,63};
 }
