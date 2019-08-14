@@ -366,10 +366,14 @@ public class MovePiece {
     public String WKCastle(long WR, boolean WQC, boolean WKC){
         StringBuilder list = new StringBuilder();
         if (WKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[0]) & WR) != 0){
-            list.append("7476,");
+            if (( OCCUPIED & ((1L<<2) | (1L<<1)) ) == 0){
+                list.append("7476,");
+            }
         }
         if (WQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[1]) & WR) != 0){
-            list.append("7472,");
+            if (( OCCUPIED & ((1L<<4) | (1L<<5) | (1L<<6)) ) == 0){
+                list.append("7472,");
+            }
         }
         return list.toString();
     }
@@ -378,10 +382,14 @@ public class MovePiece {
     public String BKCastle(long BR, boolean BQC, boolean BKC){
         StringBuilder list = new StringBuilder();
         if (BKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[2]) & BR) != 0){
-            list.append("0406,");
+            if ((OCCUPIED & ((1L << 57) | (1L<<58)) ) == 0) {
+                list.append("0406,");
+            }
         }
         if (BQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[3]) & BR) != 0){
-            list.append("0402,");
+            if ((OCCUPIED & ((1L<<60) | (1L<<61) |( 1L<<62)) ) == 0){
+                list.append("0402,");
+            }
         }
         return list.toString();
     }

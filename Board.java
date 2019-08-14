@@ -66,7 +66,7 @@ public class Board {
 //        m.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC);
 //        ChessUtilities.printBitboard(m.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
 //        ChessUtilities.printBitboard(m.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
-        Perft.perft(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, true, 0);
+        Perft.perft(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, false, 0);
         System.out.println(Perft.perftMoveCounter);
         //        generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
