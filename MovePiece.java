@@ -38,7 +38,7 @@ public class MovePiece {
         possibleMoves.append(NPossibleMoves(WN));
         possibleMoves.append(KPossibleMoves(WK));
         possibleMoves.append(WKCastle(WR, WQC, WKC));
-        System.out.println(possibleMoves.toString());
+//        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
 
@@ -55,7 +55,7 @@ public class MovePiece {
         possibleMoves.append(NPossibleMoves(BN));
         possibleMoves.append(KPossibleMoves(BK));
         possibleMoves.append(BKCastle(BR, BQC, BKC));
-        System.out.println(possibleMoves.toString());
+//        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
 
@@ -463,7 +463,7 @@ public class MovePiece {
         OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
 
         // white pawn unsafe squares
-        unsafe = ((WP >> 7) & ~BitBoards.H_FILE) | ((WP >> 9) & ~BitBoards.A_FILE);
+        unsafe = ((BP >> 7) & ~BitBoards.H_FILE) | ((BP >> 9) & ~BitBoards.A_FILE);
 
         long possibleMove;
         // white knight unsafe squares
@@ -484,7 +484,7 @@ public class MovePiece {
                 possibleMove &= ~BitBoards.FILE_AB;
             }
             unsafe |= possibleMove;
-            WN &= ~i;
+            BN &= ~i;
             i = BN & -BN;
         }
 
@@ -511,7 +511,7 @@ public class MovePiece {
         }
 
         // white king unsafe squares
-        int boardIndex = 64 - Long.numberOfTrailingZeros(WK);
+        int boardIndex = 64 - Long.numberOfTrailingZeros(BK);
         // I check 55 because the KING_SPACES static is the possible king moves on g2, which is position 55 on the bitboard
         if (boardIndex > 55){
             possibleMove = BitBoards.KING_SPACES >> (boardIndex - 55);
