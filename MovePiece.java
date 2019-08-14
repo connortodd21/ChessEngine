@@ -25,7 +25,7 @@ public class MovePiece {
         return (diagonalMoves & BitBoards.DIAGONAL_MASKS_LEFT_TO_RIGHT[(piece / 8) + 7 - (piece % 8)]) | (antiDiagonalMoves & BitBoards.DIAGONAL_MASKS_RIGHT_TO_LEFT[14 - ((piece / 8) + (piece % 8))]);
     }
 
-    public String whitePossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean WQC, boolean WKC){
+    public static String whitePossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean WQC, boolean WKC){
         NOT_ENEMY_PIECES = ~(WP|WN|WB|WR|WQ|WK|BK);
         ENEMY_PIECES = BP | BN | BB | BR | BQ ;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
@@ -42,7 +42,7 @@ public class MovePiece {
         return possibleMoves.toString();
     }
 
-    public String blackPossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean BQC, boolean BKC){
+    public static String blackPossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean BQC, boolean BKC){
         NOT_ENEMY_PIECES = ~(BP|BN|BB|BR|BQ|BK|WK);
         ENEMY_PIECES = WP | WN |WB | WR | WQ;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
@@ -60,7 +60,7 @@ public class MovePiece {
     }
 
 
-    public String WPPossibleMoves(long WP, long EP, long BP){
+    public static String WPPossibleMoves(long WP, long EP, long BP){
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
         // CAPTURE RIGHT
         // Shifting the pawn over by 7 on the bitboard results in the square diagonal to the right of the pawn (i.e. the square to capture to the right)
@@ -161,7 +161,7 @@ public class MovePiece {
         return list.toString();
     }
 
-    public String BPPossibleMoves(long BP, long EP, long WP){
+    public static String BPPossibleMoves(long BP, long EP, long WP){
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
         // CAPTURE RIGHT
         // Shifting the pawn over by 7 on the bitboard results in the square diagonal to the right of the pawn (i.e. the square to capture to the right)
@@ -190,14 +190,14 @@ public class MovePiece {
         singleMove = possibleMove & -possibleMove;
         while (singleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(singleMove);
-            list.append(((i-1)/8-1)+""+((i-1)%8)+""+(i/8)+""+((i-1)%8)+",");
+            list.append(((i-1)/8-1)+""+((i-1)%8)+""+((i-1)/8)+""+((i-1)%8)+",");
             possibleMove = possibleMove & ~singleMove;
             singleMove = possibleMove & -possibleMove;
         }
         // MOVE 2 FORWARD
         // big thing is to check that both squares in front of the pawn are empty and that the destination is on rank 4
         // this avoids pawns jumping over pieces, and makes sure only starting pawns (on rank 2) can jump two squares
-        possibleMove = (BP>>16) & EMPTY & (EMPTY << 8) & BitBoards.RANK_5;
+        possibleMove = (BP>>16) & EMPTY & (EMPTY >> 8) & BitBoards.RANK_5;
         singleMove = possibleMove & -possibleMove;
         while (singleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(singleMove) + 8;
@@ -254,7 +254,7 @@ public class MovePiece {
     }
 
 
-    public String NPossibleMoves(long KNIGHT){
+    public static String NPossibleMoves(long KNIGHT){
         StringBuilder list = new StringBuilder();
         long i = KNIGHT & -KNIGHT; //find knights
         long possibleMove;
@@ -283,7 +283,7 @@ public class MovePiece {
     }
 
 
-    public String BPossibleMoves(long BISHOP){
+    public static String BPossibleMoves(long BISHOP){
         StringBuilder list = new StringBuilder();
         long i = BISHOP & -BISHOP; //find bishops
         long possibleMove;
@@ -300,7 +300,7 @@ public class MovePiece {
     }
 
 
-    public String RPossibleMoves(long ROOK){
+    public static String RPossibleMoves(long ROOK){
         StringBuilder list = new StringBuilder();
         long i = ROOK & -ROOK; //find rooks
         long possibleMove;
@@ -317,7 +317,7 @@ public class MovePiece {
     }
 
 
-    public String QPossibleMoves(long QUEEN){
+    public static String QPossibleMoves(long QUEEN){
         StringBuilder list = new StringBuilder();
         long i = QUEEN & -QUEEN; //find queens
         long possibleMove;
@@ -334,7 +334,7 @@ public class MovePiece {
     }
 
 
-    public String KPossibleMoves(long KING){
+    public static String KPossibleMoves(long KING){
         StringBuilder list = new StringBuilder();
         long i = KING & -KING; //find king
         long possibleMove = 0;
@@ -363,7 +363,7 @@ public class MovePiece {
     }
 
 
-    public String WKCastle(long WR, boolean WQC, boolean WKC){
+    public static String WKCastle(long WR, boolean WQC, boolean WKC){
         StringBuilder list = new StringBuilder();
         if (WKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[0]) & WR) != 0){
             if (( OCCUPIED & ((1L<<2) | (1L<<1)) ) == 0){
@@ -379,7 +379,7 @@ public class MovePiece {
     }
 
 
-    public String BKCastle(long BR, boolean BQC, boolean BKC){
+    public static String BKCastle(long BR, boolean BQC, boolean BKC){
         StringBuilder list = new StringBuilder();
         if (BKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[2]) & BR) != 0){
             if ((OCCUPIED & ((1L << 57) | (1L<<58)) ) == 0) {
@@ -395,7 +395,7 @@ public class MovePiece {
     }
 
 
-    public long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+    public static long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
         long unsafe;
         OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
 
@@ -466,7 +466,7 @@ public class MovePiece {
         return unsafe;
     }
 
-    public long unsafeForWhite(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+    public static long unsafeForWhite(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
         long unsafe;
         OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
 
@@ -538,7 +538,7 @@ public class MovePiece {
     }
 
 
-    private void addMovesToList(StringBuilder list, long possibleMove, int boardIndex, long j) {
+    private static void addMovesToList(StringBuilder list, long possibleMove, int boardIndex, long j) {
         while (j != 0)
         {
             int index = Long.numberOfLeadingZeros(j);
@@ -548,20 +548,20 @@ public class MovePiece {
         }
     }
 
-    public long makeMove(long board, String move, char type){
+    public static long makeMove(long board, String move, char type){
         if (Character.isDigit(move.charAt(3))){
             // this means we have a move with the format x,y,x,y, not a promotion or en passant
             // find the starting index on the bitboard using the original x,y pair
             int start = (Character.getNumericValue(move.charAt(0))*8) + (Character.getNumericValue(move.charAt(1)));
             // find the ending index on the bitboard using the new x,y pair
             int end = (Character.getNumericValue(move.charAt(2))*8) + (Character.getNumericValue(move.charAt(3)));
-            if (((board >> start) & 1) == 1){
-                board &= ~(1L << start);
-                board |= (1L << end);
+            if (((board >> 63-start) & 1) == 1){
+                board &= ~(1L << 63-start);
+                board |= (1L << 63-end);
             }
             else{
                 // this means there is a capture taking place
-                board &= ~(1L << end);
+                board &= ~(1L << 63-end);
             }
         }
         else if(move.charAt(3) == 'P'){
@@ -578,11 +578,11 @@ public class MovePiece {
                 end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(3) - '0'] & BitBoards.RANK_1);
             }
             if (type == move.charAt(2)){
-                board &= ~(1L << start);
-                board |= (1L << end);
+                board &= ~(1L << 63 - start);
+                board |= (1L << 63 - end);
             }
             else {
-                board &= ~(1L << end);
+                board &= ~(1L << 63 - end);
             }
         }
         else if(move.substring(2).equals("EN")){
@@ -598,9 +598,9 @@ public class MovePiece {
                 start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_4);
                 end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_3);
             }
-            if (((board >> start) & 1) == 1){
-                board &= ~(1L << start);
-                board |= (1L << end);
+            if (((board >> 63 - start) & 1) == 1){
+                board &= ~(1L << 63 - start);
+                board |= (1L << 63 - end);
             }
         }
         else {
@@ -609,7 +609,7 @@ public class MovePiece {
         return board;
     }
 
-    public long makeMoveEP(long board,String move) {
+    public static long makeMoveEP(long board,String move) {
         if (Character.isDigit(move.charAt(3))) {
             int start=(Character.getNumericValue(move.charAt(0))*8)+(Character.getNumericValue(move.charAt(1)));
             // check for a double pawn push

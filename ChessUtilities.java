@@ -27,7 +27,7 @@ public class ChessUtilities {
             binary = new StringBuilder("0000000000000000000000000000000000000000000000000000000000000000");
             binary.setCharAt(i, '1');
             switch (board[i/8][i%8]){
-                case "1": bitBoard += b.binaryToLong(binary); break;
+                case "1": bitBoard += Board.binaryToLong(binary); break;
             }
         }
         for (int i = 0; i < Long.numberOfLeadingZeros(bitBoard); i++) {
@@ -35,7 +35,7 @@ public class ChessUtilities {
         }
         System.out.print(Long.toBinaryString(bitBoard));
         System.out.println();
-        b.generateVisualBoard(bitBoard, 0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L);
+        Board.generateVisualBoard(bitBoard, 0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L);
     }
 
     public static void printBitboard(long bitboard) {

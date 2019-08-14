@@ -11,7 +11,7 @@ public class Board {
     /*
         Initialize a new game with starting board
      */
-    public void initializeBoard() {
+    public static void initializeBoard() {
         // initialize empty bitboards for all 12 pieces
         long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP=0L;
         boolean WQC = true, WKC = true, BQC = true, BKC = true;
@@ -41,7 +41,7 @@ public class Board {
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
         BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
           */
-    public void generateBitboards(String[][] board, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC){
+    public static void generateBitboards(String[][] board, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC){
         StringBuilder binary;
         for (int i = 0; i < 64; i++) {
             binary = new StringBuilder("0000000000000000000000000000000000000000000000000000000000000000");
@@ -61,14 +61,17 @@ public class Board {
                 case "k": BK += binaryToLong(binary); break;
             }
         }
-        MovePiece m = new MovePiece();
-//        m.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC);
-//        m.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC);
+//        System.out.println(MovePiece.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC));
+//        MovePiece.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC);
+//        MovePiece.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC);
 //        ChessUtilities.printBitboard(m.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
 //        ChessUtilities.printBitboard(m.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
-        Perft.perft(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, false, 0);
-        System.out.println(Perft.perftMoveCounter);
-        //        generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+        Perft.perftRoot(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, true, 0);
+//        System.out.println(Perft.perftMoveCounter);
+//        long temp = MovePiece.makeMove(WP, "6050", 'P');
+//        ChessUtilities.printBitboard(temp);
+//        ChessUtilities.printEntireLongBinary(temp);
+
     }
 
     /*
@@ -79,7 +82,7 @@ public class Board {
 
         @return         the long value of the binary string
      */
-    public long binaryToLong(StringBuilder binary) {
+    public static long binaryToLong(StringBuilder binary) {
         if (binary.charAt(0) == '0') {//not going to be a negative number
             return Long.parseLong(binary.toString(), 2);
         } else {
@@ -94,7 +97,7 @@ public class Board {
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
         BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
      */
-    public void generateVisualBoard(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
+    public static void generateVisualBoard(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
         String[][] board = new String[8][8];
         for (int i = 0; i < 64; i++) {
             board[i/8][i%8] = " ";
@@ -149,7 +152,7 @@ public class Board {
         @param
         board:      String representation of the current board in play
      */
-    public void printBoard(String[][] board){
+    public static void printBoard(String[][] board){
         for (int i = 0; i < 8; i++) {
             System.out.println(Arrays.toString(board[i]));
         }
