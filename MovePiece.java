@@ -397,8 +397,7 @@ public class MovePiece {
         long possibleMove;
         // white knight unsafe squares
         long i = WN & -WN;
-        while(i != 0)
-        {
+        while(i != 0) {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
             if (boardIndex > 46){
@@ -421,8 +420,7 @@ public class MovePiece {
         // white bishop/queen (diagonal) unsafe squares
         long WBQ = WB | WQ;
         i = WBQ & -WBQ;
-        while(i != 0)
-        {
+        while(i != 0) {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = DiagonalLeftAndRightMoves(boardIndex);
             unsafe |= possibleMove;
@@ -433,13 +431,83 @@ public class MovePiece {
         // white rook/queen (vertical + horizontal) unsafe squares
         long WRQ = WR | WQ;
         i = WRQ & -WRQ; //find rooks
-        while(i != 0)
-        {
+        while(i != 0) {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             possibleMove = HorizontalAndVerticalMoves(boardIndex);
             unsafe |= possibleMove;
             WRQ &= ~i;
             i = WRQ & - WRQ;
+        }
+
+        // white king unsafe squares
+        int boardIndex = 64 - Long.numberOfTrailingZeros(WK);
+        // I check 55 because the KING_SPACES static is the possible king moves on g2, which is position 55 on the bitboard
+        if (boardIndex > 55){
+            possibleMove = BitBoards.KING_SPACES >> (boardIndex - 55);
+        }
+        else {
+            possibleMove = BitBoards.KING_SPACES << (55 - boardIndex);
+        }
+        if (boardIndex % 8 < 4){
+            possibleMove &= ~BitBoards.FILE_GH;
+        }
+        else {
+            possibleMove &= ~BitBoards.FILE_AB;
+        }
+        unsafe |= possibleMove;
+        return unsafe;
+    }
+
+    public long unsafeForWhite(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+        long unsafe;
+        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
+
+        // white pawn unsafe squares
+        unsafe = ((WP >> 7) & ~BitBoards.H_FILE) | ((WP >> 9) & ~BitBoards.A_FILE);
+
+        long possibleMove;
+        // white knight unsafe squares
+        long i = BN & -BN;
+        while(i != 0) {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
+            if (boardIndex > 46){
+                possibleMove = BitBoards.KNIGHT_SPACES >> (boardIndex - 46);
+            }
+            else {
+                possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
+            }
+            if (boardIndex % 8 < 4){
+                possibleMove &= ~BitBoards.FILE_GH;
+            }
+            else {
+                possibleMove &= ~BitBoards.FILE_AB;
+            }
+            unsafe |= possibleMove;
+            WN &= ~i;
+            i = BN & -BN;
+        }
+
+        // white bishop/queen (diagonal) unsafe squares
+        long BBQ = BB | BQ;
+        i = BBQ & -BBQ;
+        while(i != 0) {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = DiagonalLeftAndRightMoves(boardIndex);
+            unsafe |= possibleMove;
+            BBQ &= ~i;
+            i = BBQ & - BBQ;
+        }
+
+        // white rook/queen (vertical + horizontal) unsafe squares
+        long BRQ = BR | BQ;
+        i = BRQ & -BRQ; //find rooks
+        while(i != 0) {
+            int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+            possibleMove = HorizontalAndVerticalMoves(boardIndex);
+            unsafe |= possibleMove;
+            BRQ &= ~i;
+            i = BRQ & - BRQ;
         }
 
         // white king unsafe squares
@@ -470,5 +538,77 @@ public class MovePiece {
             possibleMove &= ~j;
             j = possibleMove & - possibleMove;
         }
+    }
+
+    public long makeMove(long board, String move, char type){
+        if (Character.isDigit(move.charAt(3))){
+            // this means we have a move with the format x,y,x,y, not a promotion or en passant
+            // find the starting index on the bitboard using the original x,y pair
+            int start = (Character.getNumericValue(move.charAt(0))*8) + (Character.getNumericValue(move.charAt(1)));
+            // find the ending index on the bitboard using the new x,y pair
+            int end = (Character.getNumericValue(move.charAt(2))*8) + (Character.getNumericValue(move.charAt(3)));
+            if (((board >> start) & 1) == 1){
+                board &= ~(1L << start);
+                board |= (1L << end);
+            }
+            else{
+                // this means there is a capture taking place
+                board &= ~(1L << end);
+            }
+        }
+        else if(move.charAt(3) == 'P'){
+            // pawn promotion
+            int start, end;
+            if (Character.isUpperCase(move.charAt(2))){
+                // white piece, therefore it promotes from rank 7 to rank 8
+                start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_7);
+                end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_8);
+            }
+            else {
+                // black piece, therefore it promotes from rank 2 to rank 1
+                start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(2) - '0'] & BitBoards.RANK_2);
+                end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(3) - '0'] & BitBoards.RANK_1);
+            }
+            if (type == move.charAt(2)){
+                board &= ~(1L << start);
+                board |= (1L << end);
+            }
+            else {
+                board &= ~(1L << end);
+            }
+        }
+        else if(move.substring(2).equals("EN")){
+            // en passant
+            int start, end;
+            if (Character.isUpperCase(move.charAt(2))){
+                // white piece, therefore en passant capture would be from rank 5 to 6
+                start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_5);
+                end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_6);
+            }
+            else{
+                // black piece, therefore en passant capture would be from rank 4 to 3
+                start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_4);
+                end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_3);
+            }
+            if (((board >> start) & 1) == 1){
+                board &= ~(1L << start);
+                board |= (1L << end);
+            }
+        }
+        else {
+            System.out.println("Error: Invalid move");
+        }
+        return board;
+    }
+
+    public long makeMoveEP(long board,String move) {
+        if (Character.isDigit(move.charAt(3))) {
+            int start=(Character.getNumericValue(move.charAt(0))*8)+(Character.getNumericValue(move.charAt(1)));
+            // check for a double pawn push
+            if ((Math.abs(move.charAt(0) - move.charAt(2)) == 2) && (((board>>>start) & 1) == 1)) {
+                return BitBoards.FILE_MASKS[move.charAt(1)-'0'];
+            }
+        }
+        return 0;
     }
 }
