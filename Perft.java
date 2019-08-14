@@ -11,9 +11,11 @@ public class Perft {
 
     static int perftTotalMoveCounter=0;
     static int perftMoveCounter=0;
-    static int perftMaxDepth=2;
+    static int perftMaxDepth=4;
+    static long startTime = 0;
 
     public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC, boolean WhiteToMove, int depth){
+        startTime = System.currentTimeMillis();
         String moves;
         if (WhiteToMove){
             moves = MovePiece.whitePossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,WQC,WKC);
@@ -61,6 +63,7 @@ public class Perft {
             }
         }
         System.out.println("\ntotal: " + perftTotalMoveCounter);
+        System.out.println("time: " + ((float) (System.currentTimeMillis() - startTime)/1000) + " seconds");
     }
 
     public static void perft(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC, boolean WhiteToMove, int depth){
