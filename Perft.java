@@ -56,6 +56,7 @@ public class Perft {
                 }
                 if (((WKt&MovePiece.unsafeForWhite(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && WhiteToMove) || ((BKt&MovePiece.unsafeForBlack(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && !WhiteToMove)) {
                     perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WQCt,WKCt,BQCt,BKCt,!WhiteToMove,depth+1);
+//                    Board.generateVisualBoard(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt);
                     System.out.println(moveToAlgebra(moves.substring(i,i+4))+" "+perftMoveCounter);
                     perftTotalMoveCounter+=perftMoveCounter;
                     perftMoveCounter=0;
