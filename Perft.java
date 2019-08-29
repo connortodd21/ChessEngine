@@ -11,7 +11,7 @@ public class Perft {
 
     static int perftTotalMoveCounter=0;
     static int perftMoveCounter=0;
-    static int perftMaxDepth=4;
+    static int perftMaxDepth=6;
     static long startTime = 0;
 
     public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC, boolean WhiteToMove, int depth){
@@ -56,8 +56,7 @@ public class Perft {
                 }
                 if (((WKt&MovePiece.unsafeForWhite(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && WhiteToMove) || ((BKt&MovePiece.unsafeForBlack(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && !WhiteToMove)) {
                     perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WQCt,WKCt,BQCt,BKCt,!WhiteToMove,depth+1);
-//                    Board.generateVisualBoard(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt);
-                    System.out.println(moveToAlgebra(moves.substring(i,i+4))+" "+perftMoveCounter);
+                    System.out.println(moveToAlgebra(moves.substring(i,i+4))+" "+( perftMoveCounter == 0 ? 1 : perftMoveCounter ));
                     perftTotalMoveCounter+=perftMoveCounter;
                     perftMoveCounter=0;
                 }

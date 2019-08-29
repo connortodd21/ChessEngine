@@ -19,8 +19,7 @@ public class Board {
          initialize starting chess board.
          black is lower case, white is upper case
          r/R = rook, n/N = knight, b/B = bishop, p/P = pawn, q/Q = queen, k/K = king
-         */
-        String board [][] = {
+         String board [][] = {
             {"r", "n", "b", "q", "k", "b", "n", "r"},
             {"p", "p", "p", "p", "p", "p", "p", "p"},
             {" ", " ", " ", " ", " ", " ", " ", " "},
@@ -29,6 +28,17 @@ public class Board {
             {" ", " ", " ", " ", " ", " ", " ", " "},
             {"P", "P", "P", "P", "P", "P", "P", "P"},
             {"R", "N", "B", "Q", "K", "B", "N", "R"}
+        };
+         */
+        String board [][] = {
+                {"r", "n", "b", "q", "k", "b", "n", "r"},
+                {"p", "p", "p", "p", "p", "p", "p", "p"},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {"P", "P", "P", "P", "P", "P", "P", "P"},
+                {"R", "N", "B", "Q", "K", "B", "N", "R"}
         };
         generateBitboards(board, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, true, true, true, true);
     }
@@ -61,7 +71,13 @@ public class Board {
                 case "k": BK += binaryToLong(binary); break;
             }
         }
-//        System.out.println(MovePiece.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC));
+//        ChessUtilities.printBitboard(MovePiece.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+//        ChessUtilities.printBitboard(WK);
+//        String moves = MovePiece.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC);
+//        for (int i = 0; i < moves.length(); i+=5) {
+//            System.out.println(Perft.moveToAlgebra(moves.substring(i, i+5)));
+//        }
+//        System.out.println(MovePiece.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC));
 //        MovePiece.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC);
 //        MovePiece.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC);
 //        ChessUtilities.printBitboard(m.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
@@ -72,6 +88,86 @@ public class Board {
 //        ChessUtilities.printBitboard(temp);
 //        ChessUtilities.printEntireLongBinary(temp);
 
+    }
+
+    public static void importFEN(String fen){
+        UserInterface.WP=0; UserInterface.WN=0; UserInterface.WB=0;
+        UserInterface.WR=0; UserInterface.WQ=0; UserInterface.WK=0;
+        UserInterface.BP=0; UserInterface.BN=0; UserInterface.BB=0;
+        UserInterface.BR=0; UserInterface.BQ=0; UserInterface.BK=0;
+        UserInterface.WCK=false; UserInterface.WCQ=false;
+        UserInterface.BCK=false; UserInterface.BCQ=false;
+
+        int index = 0;
+        int board = 0;
+        while (fen.charAt(index) != ' '){
+            switch (fen.charAt(index++)){
+                case 'P':
+                    UserInterface.WP |= (1L << (63-board++));
+                    break;
+                case 'N':
+                    UserInterface.WN |= (1L << (63 - board++));
+                    break;
+                case 'B':
+                    UserInterface.WB |= (1L << (63 - board++));
+                    break;
+                case 'R':
+                    UserInterface.WR |= (1L << (63 - board++));
+                    break;
+                case 'Q':
+                    UserInterface.WQ |= (1L << (63 - board++));
+                    break;
+                case 'K':
+                    UserInterface.WK |= (1L << (63 - board++));
+                    break;
+                case 'p':
+                    UserInterface.BP |= (1L << (63 - board++));
+                    break;
+                case 'n':
+                    UserInterface.BN |= (1L << (63 - board++));
+                    break;
+                case 'b':
+                    UserInterface.BB |= (1L << (63 - board++));
+                    break;
+                case 'r':
+                    UserInterface.BR |= (1L << (63 - board++));
+                    break;
+                case 'q':
+                    UserInterface.BQ |= (1L << (63 - board++));
+                    break;
+                case 'k':
+                    UserInterface.BK |= (1L << (63 - board++));
+                    break;
+                case '/':
+                    break;
+                case '1':
+                    board++;
+                    break;
+                case '2':
+                    board+=2;
+                    break;
+                case '3':
+                    board+=3;
+                    break;
+                case '4':
+                    board+=4;
+                    break;
+                case '5':
+                    board+=5;
+                    break;
+                case '6':
+                    board+=6;
+                    break;
+                case '7':
+                    board+=7;
+                    break;
+                case '8':
+                    board+=8;
+                    break;
+                default:  break;
+            }
+        }
+        generateVisualBoard(UserInterface.WP, UserInterface.WN, UserInterface.WB, UserInterface.WR, UserInterface.WQ, UserInterface.WK, UserInterface.BP, UserInterface.BN, UserInterface.BB, UserInterface.BR, UserInterface.BQ, UserInterface.BK);
     }
 
     /*

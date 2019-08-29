@@ -57,6 +57,7 @@ public class MovePiece {
         possibleMoves.append(NPossibleMoves(BN));
         possibleMoves.append(KPossibleMoves(BK));
         possibleMoves.append(BKCastle(BR, BQC, BKC));
+//        System.out.println(BPPossibleMoves(BP, EP, WP));
 //        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
@@ -152,22 +153,13 @@ public class MovePiece {
         possibleMove =(WP >> 1) & BP & BitBoards.RANK_5 & ~BitBoards.A_FILE & EP;
         if (possibleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(possibleMove);
-            if (i%8+1 > 7){
-                System.out.println(i);
-                ChessUtilities.printBitboard(possibleMove);
-            }
-            list.append((i%8)-1 + "" + i/8 + "EN");
+            list.append(((i-1)%8)-1 + "" + (i-1)%8 + "EW,");
         }
         // capture left
         possibleMove =(WP << 1) & BP & BitBoards.RANK_5 & ~BitBoards.H_FILE & EP;
         if (possibleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(possibleMove);
-            //TODO FIX THIS ERROR AT (1%8)+1
-            if (i%8+1 > 7){
-                System.out.println(i);
-                ChessUtilities.printBitboard(possibleMove);
-            }
-            list.append((i%8)-1 + "" + Math.abs(i/8-2) + "EN");
+            list.append((i%8) + "" + (i-1)%8 + "EW,");
         }
         return list.toString();
     }
@@ -177,22 +169,24 @@ public class MovePiece {
         StringBuilder list = new StringBuilder(); // stored as a string: <white x> <white y> <black x> <black y>
         // CAPTURE RIGHT
         // Shifting the pawn over by 7 on the bitboard results in the square diagonal to the right of the pawn (i.e. the square to capture to the right)
-        // White can only capture is there is a black piece on the right diagonal. Capturing to the right on the A file is impossible, and the 8th rank is for pawn promotion
+        // Black can only capture is there is a white piece on the right diagonal. Capturing to the right on the H file is impossible, and the 1st rank is for pawn promotion
         long possibleMove = (BP>>7) & ENEMY_PIECES & ~BitBoards.RANK_1 & ~BitBoards.H_FILE;
+//        ChessUtilities.printBitboard(possibleMove);
         long singleMove = possibleMove & -possibleMove;
         while (singleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(singleMove);
-            list.append(i/8 -1 +""+Math.abs((i-2)%8)+""+(int) Math.floor((double) (i-1)/8)+""+Math.abs((i-1)%8)+",");
+//            System.out.println(i);
+            list.append((i/8-1) +""+i%8+""+(int) Math.floor((double) (i-1)/8)+""+Math.abs((i-1)%8)+",");
             possibleMove = possibleMove & ~singleMove;
             singleMove = possibleMove & -possibleMove;
         }
         // CAPTURE LEFT
-        // same idea as capture right, just shift over by 9 (two more squares) and ignore black pawns on the H file
+        // same idea as capture right, just shift over by 9 (two more squares) and ignore black pawns on the A file
         possibleMove = (BP >> 9) & ENEMY_PIECES & ~BitBoards.RANK_1 & ~BitBoards.A_FILE;
         singleMove = possibleMove & -possibleMove;
         while (singleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(singleMove);
-            list.append(i/8 - 1+""+i%8+""+(int) Math.floor((double) (i-1)/8)+""+Math.abs((i-1)%8)+",");
+            list.append((int) Math.ceil((double) i/8)-2+""+Math.abs((i-2)%8)+""+(int) Math.floor((double) (i-1)/8)+""+Math.abs((i-1)%8)+",");
             possibleMove = possibleMove & ~singleMove;
             singleMove = possibleMove & -possibleMove;
         }
@@ -255,10 +249,10 @@ public class MovePiece {
         if (possibleMove != 0){
             int i = 64 - Long.numberOfTrailingZeros(possibleMove);
             if (i%8+1 > 7){
-                System.out.println(i);
-                ChessUtilities.printBitboard(possibleMove);
+//                System.out.println(i);
+//                ChessUtilities.printBitboard(possibleMove);
             }
-            list.append((i%8)-1 + "" + i/8 + "EN");
+            list.append((i%8)-1 + "" + i/8 + "EB,");
         }
         // capture left
         possibleMove =(BP << 1) & WP & BitBoards.RANK_4 & ~BitBoards.A_FILE & EP;
@@ -266,10 +260,10 @@ public class MovePiece {
             //TODO FIX THIS ERROR AT (1%8)+1
             int i = 64 - Long.numberOfTrailingZeros(possibleMove);
             if (i%8+1 > 7){
-                System.out.println(i);
-                ChessUtilities.printBitboard(possibleMove);
+//                System.out.println(i);
+//                ChessUtilities.printBitboard(possibleMove);
             }
-            list.append((i%8)+1 + "" + i/8 + "EN");
+            list.append((i%8) + "" + i/8 + "EB,");
         }
         return list.toString();
     }
@@ -362,6 +356,7 @@ public class MovePiece {
         while(i != 0)
         {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
+//            System.out.println(boardIndex);
             // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
             if (boardIndex > 55){
                 possibleMove = BitBoards.KING_SPACES >> (boardIndex - 55);
@@ -375,6 +370,7 @@ public class MovePiece {
             else {
                 possibleMove &= ~BitBoards.FILE_AB & NOT_ENEMY_PIECES;
             }
+//            ChessUtilities.printBitboard(possibleMove);
             long j = possibleMove & -possibleMove;
             addMovesToList(list, possibleMove, boardIndex, j);
             KING &= ~i;
@@ -435,11 +431,11 @@ public class MovePiece {
             else {
                 possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
             }
-            if (boardIndex % 8 < 4){
-                possibleMove &= ~BitBoards.FILE_GH;
+            if ((64 - boardIndex) % 8 < 4){
+                possibleMove &= ~BitBoards.FILE_AB;
             }
             else {
-                possibleMove &= ~BitBoards.FILE_AB;
+                possibleMove &= ~BitBoards.FILE_GH;
             }
             unsafe |= possibleMove;
             WN &= ~i;
@@ -498,6 +494,7 @@ public class MovePiece {
         long possibleMove;
         // white knight unsafe squares
         long i = BN & -BN;
+
         while(i != 0) {
             int boardIndex = 64 - Long.numberOfTrailingZeros(i);
             // I check 46 because the KNIGHT_SPACES static is the possible knight moves on f3, which is position 46 on the bitboard
@@ -507,11 +504,11 @@ public class MovePiece {
             else {
                 possibleMove = BitBoards.KNIGHT_SPACES << (46 - boardIndex);
             }
-            if (boardIndex % 8 < 4){
-                possibleMove &= ~BitBoards.FILE_GH;
+            if ((64 - boardIndex) % 8 < 4){
+                possibleMove &= ~BitBoards.FILE_AB;
             }
             else {
-                possibleMove &= ~BitBoards.FILE_AB;
+                possibleMove &= ~BitBoards.FILE_GH;
             }
             unsafe |= possibleMove;
             BN &= ~i;
@@ -608,21 +605,22 @@ public class MovePiece {
                 board &= ~(1L << 63 - end);
             }
         }
-        else if(move.substring(2).equals("EN")){
+        else if(move.charAt(2) == 'E'){
             // en passant
             int start, end;
-            if (Character.isUpperCase(move.charAt(2))){
+            if (move.charAt(3) == 'W'){
                 // white piece, therefore en passant capture would be from rank 5 to 6
                 if (Character.getNumericValue(move.charAt(2)) > 7){
-                    System.out.println(move);
+//                    System.out.println(move);
                 }
                 start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_5);
                 end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_6);
             }
-            else{
+            else {
                 // black piece, therefore en passant capture would be from rank 4 to 3
                 start = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(0) - '0'] & BitBoards.RANK_4);
                 end = Long.numberOfTrailingZeros(BitBoards.FILE_MASKS[move.charAt(1) - '0'] & BitBoards.RANK_3);
+
             }
             if (((board >> 63 - start) & 1) == 1){
                 board &= ~(1L << 63 - start);
@@ -630,7 +628,12 @@ public class MovePiece {
             }
         }
         else {
-            System.out.println("Error: " + move + " is an Invalid move");
+            ChessUtilities.printBitboard(ENEMY_PIECES);
+            ChessUtilities.printBitboard(OCCUPIED);
+            ChessUtilities.printBitboard(board);
+            System.out.println(type);
+            System.out.println("Error: " + move + " is an invalid move");
+            System.exit(0);
         }
         return board;
     }
@@ -640,7 +643,7 @@ public class MovePiece {
         if (Character.isDigit(move.charAt(3))) {
             int start=(Character.getNumericValue(move.charAt(0))*8)+(Character.getNumericValue(move.charAt(1)));
             // check for a double pawn push
-            if ((Math.abs(move.charAt(0) - move.charAt(2)) == 2) && (((board>>>start) & 1) == 1)) {
+            if ((Math.abs(move.charAt(0) - move.charAt(2)) == 2) && (((board>>(64-start)) & 1) == 1)) {
                 return BitBoards.FILE_MASKS[move.charAt(1)-'0'];
             }
         }
