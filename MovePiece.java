@@ -39,7 +39,6 @@ public class MovePiece {
         possibleMoves.append(NPossibleMoves(WN));
         possibleMoves.append(KPossibleMoves(WK));
         possibleMoves.append(WKCastle(WR, WQC, WKC));
-//        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
     }
 
