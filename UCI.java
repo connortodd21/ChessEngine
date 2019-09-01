@@ -4,6 +4,7 @@ public class UCI {
 
     public static void startUCI(){
         while (true){
+            System.out.print("> ");
             Scanner s = new Scanner(System.in);
             String input = s.nextLine();
             if (input.equals("uci")){
@@ -56,13 +57,13 @@ public class UCI {
     }
 
     public static void UCIPosition(String input){
-        input = input.substring("position".length()).concat(" ");
-        if (input.contains("startpos ")){
-            input = input.substring("startpos ".length());
+        input = input.substring("position ".length());
+        if (input.contains("startpos")){
+            input = input.substring("startpos".length());
             Board.importFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
         else if (input.contains("fen")){
-            input = input.substring(5);
+            input = input.substring("fen ".length());
             try {
                 Board.importFEN(input);
             } catch (Exception e){
@@ -86,11 +87,16 @@ public class UCI {
     }
 
     public static void UCIGo(String input){
-
+        input = input.substring("go ".length());
+        if (input.contains("perft")){
+            input = input.substring("perft ".length());
+            Perft.perftMaxDepth = Integer.parseInt(input);
+            Perft.perftRoot(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK, Engine.EP, Engine.WCQ, Engine.WCK, Engine.BCQ, Engine.BCK, Engine.WhiteToMove, 0);
+        }
     }
 
     public static void UCIPrint(){
-        Board.generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
+        Board.printEngineBoard();
     }
 
     public static void UCIExit(){

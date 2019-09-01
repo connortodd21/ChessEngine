@@ -14,14 +14,14 @@ public class Perft {
     static int perftMaxDepth=6;
     static long startTime = 0;
 
-    public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC, boolean WhiteToMove, int depth){
+    public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WCQ, boolean WCK, boolean BCQ, boolean BCK, boolean WhiteToMove, int depth){
         startTime = System.currentTimeMillis();
         String moves;
         if (WhiteToMove){
-            moves = MovePiece.whitePossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,WQC,WKC);
+            moves = MovePiece.whitePossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,WCQ,WCK);
         }
         else {
-            moves = MovePiece.blackPossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,BQC,BKC);
+            moves = MovePiece.blackPossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,BCQ,BCK);
         }
         for (int i = 0; i < moves.length(); i+=5) {
             long WPt=MovePiece.makeMove(WP, moves.substring(i,i+4), 'P'), WNt=MovePiece.makeMove(WN, moves.substring(i,i+4), 'N'),
@@ -32,30 +32,30 @@ public class Perft {
                     BQt=MovePiece.makeMove(BQ, moves.substring(i,i+4), 'q'), BKt=MovePiece.makeMove(BK, moves.substring(i,i+4), 'k'),
                     EPt=MovePiece.makeMoveEP(WP|BP,moves.substring(i,i+4));
             // same with castling booleans
-            boolean WQCt = WQC, WKCt = WKC, BQCt = BQC, BKCt = BKC;
+            boolean WCQt = WCQ, WCKt = WCK, BCQt = BCQ, BCKt = BCK;
             if (Character.isDigit(moves.charAt(i+3))){
                 // regular move
                 int start=(Character.getNumericValue(moves.charAt(i)) * 8) + (Character.getNumericValue(moves.charAt(i+1)));
                 if (((1L<<start) & WK)!=0) {
-                    WQCt=false; WKCt=false;
+                    WCQt=false; WCKt=false;
                 }
                 if (((1L<<start) & BK)!=0) {
-                    BQCt=false; BKCt=false;
+                    BCQt=false; BCKt=false;
                 }
                 if (((1L<<start) & WR & (1L<<63))!=0) {
-                    WKCt=false;
+                    WCKt=false;
                 }
                 if (((1L<<start) & WR & (1L<<56))!=0) {
-                    WQCt=false;
+                    WCQt=false;
                 }
                 if (((1L<<start) & BR & (1L<<7))!=0) {
-                    BKCt=false;
+                    BCKt=false;
                 }
                 if (((1L<<start) & BR & 1L)!=0) {
-                    BQCt=false;
+                    BCQt=false;
                 }
                 if (((WKt&MovePiece.unsafeForWhite(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && WhiteToMove) || ((BKt&MovePiece.unsafeForBlack(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && !WhiteToMove)) {
-                    perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WQCt,WKCt,BQCt,BKCt,!WhiteToMove,depth+1);
+                    perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WCQt,WCKt,BCQt,BCKt,!WhiteToMove,depth+1);
                     System.out.println(moveToAlgebra(moves.substring(i,i+4))+" "+( perftMoveCounter == 0 ? 1 : perftMoveCounter ));
                     perftTotalMoveCounter+=perftMoveCounter;
                     perftMoveCounter=0;
@@ -66,14 +66,14 @@ public class Perft {
         System.out.println("time: " + ((float) (System.currentTimeMillis() - startTime)/1000) + " seconds");
     }
 
-    public static void perft(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC, boolean WhiteToMove, int depth){
+    public static void perft(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WCQ, boolean WCK, boolean BCQ, boolean BCK, boolean WhiteToMove, int depth){
         if (depth < perftMaxDepth){
             String moves;
             if (WhiteToMove){
-                moves = MovePiece.whitePossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,WQC,WKC);
+                moves = MovePiece.whitePossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,WCQ,WCK);
             }
             else {
-                moves = MovePiece.blackPossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,BQC,BKC);
+                moves = MovePiece.blackPossibleMoves(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK,EP,BCQ,BCK);
             }
             
             for (int i = 0; i < moves.length(); i+=5) {
@@ -87,34 +87,34 @@ public class Perft {
                         BQt=MovePiece.makeMove(BQ, moves.substring(i,i+4), 'q'), BKt=MovePiece.makeMove(BK, moves.substring(i,i+4), 'k'),
                         EPt=MovePiece.makeMoveEP(WP|BP,moves.substring(i,i+4));
                 // same with castling booleans
-                boolean WQCt = WQC, WKCt = WKC, BQCt = BQC, BKCt = BKC;
+                boolean WCQt = WCQ, WCKt = WCK, BCQt = BCQ, BCKt = BCK;
                 if (Character.isDigit(moves.charAt(i+3))){
                     // regular move
                     int start=(Character.getNumericValue(moves.charAt(i)) * 8) + (Character.getNumericValue(moves.charAt(i+1)));
                     if (((1L<<start) & WK)!=0) {
-                        WQCt=false; WKCt=false;
+                        WCQt=false; WCKt=false;
                     }
                     if (((1L<<start) & BK)!=0) {
-                        BQCt=false; BKCt=false;
+                        BCQt=false; BCKt=false;
                     }
                     if (((1L<<start) & WR & (1L<<63))!=0) {
-                        WKCt=false;
+                        WCKt=false;
                     }
                     if (((1L<<start) & WR & (1L<<56))!=0) {
-                        WQCt=false;
+                        WCQt=false;
                     }
                     if (((1L<<start) & BR & (1L<<7))!=0) {
-                        BKCt=false;
+                        BCKt=false;
                     }
                     if (((1L<<start) & BR & 1L)!=0) {
-                        BQCt=false;
+                        BCQt=false;
                     }
                 }
                 if (((WKt&MovePiece.unsafeForWhite(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && WhiteToMove) || ((BKt&MovePiece.unsafeForBlack(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt))==0 && !WhiteToMove)) {
                     if (depth+1==perftMaxDepth) {
                         perftMoveCounter++;
                     }
-                    perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WQCt,WKCt,BQCt,BKCt,!WhiteToMove,depth+1);
+                    perft(WPt,WNt,WBt,WRt,WQt,WKt,BPt,BNt,BBt,BRt,BQt,BKt,EPt,WCQt,WCKt,BCQt,BCKt,!WhiteToMove,depth+1);
                 }
             }
         }

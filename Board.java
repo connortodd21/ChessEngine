@@ -182,7 +182,8 @@ public class Board {
         if (fen.charAt(++index) != '-'){
             Engine.EP = BitBoards.FILE_MASKS[fen.charAt(index++) - 'a'];
         }
-//        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
+        System.out.println(Engine.WhiteToMove);
+        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
     }
 
     /*
@@ -251,6 +252,55 @@ public class Board {
                 board[i/8][i%8]="q";
             }
             if (((BK<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="k";
+            }
+        }
+        printBoard(board);
+    }
+
+    public static void printEngineBoard(){
+        String[][] board = new String[8][8];
+        for (int i = 0; i < 64; i++) {
+            board[i/8][i%8] = " ";
+        }
+
+        long highOrderBit = 1L << 63;
+
+        for (int i = 0; i < 64; i++) {
+            if (((Engine.WP<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="P";
+            }
+            if (((Engine.WN<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="N";
+            }
+            if (((Engine.WB<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="B";
+            }
+            if (((Engine.WR<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="R";
+            }
+            if (((Engine.WQ<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="Q";
+            }
+            if (((Engine.WK<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="K";
+            }
+            if (((Engine.BP<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="p";
+            }
+            if (((Engine.BN<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="n";
+            }
+            if (((Engine.BB<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="b";
+            }
+            if (((Engine.BR<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="r";
+            }
+            if (((Engine.BQ<<i) & highOrderBit) == highOrderBit) {
+                board[i/8][i%8]="q";
+            }
+            if (((Engine.BK<<i) & highOrderBit) == highOrderBit) {
                 board[i/8][i%8]="k";
             }
         }
