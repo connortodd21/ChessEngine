@@ -7,4 +7,5 @@ Resources
 - [Chess Programming Wiki](https://www.chessprogramming.org/Main_Page)
 - [Stockfish](https://github.com/official-stockfish/Stockfish)
 - [Lichess](https://lichess.org/editor)
+- [UCI Protocol](https://ucichessengine.wordpress.com/2011/03/16/description-of-uci-protocol/)
 - [Logic Crazy Chess Tutorial](https://www.youtube.com/playlist?list=PLQV5mozTHmacMeRzJCW_8K3qw2miYqd0c)

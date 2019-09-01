@@ -21,16 +21,13 @@ public class RandomNumber {
         long endTime = startTime + (sampleSeconds * 1000);
         int[] distArray;
         distArray = new int[sampleSize];
-        while (System.currentTimeMillis() < endTime)
-        {
-            for (int i = 0; i < 10000; i++)
-            {
+        while (System.currentTimeMillis() < endTime) {
+            for (int i = 0; i < 10000; i++) {
                 distArray[(int)((secureRandom() % (sampleSize/2)) + sampleSize/2)]++;
 //                distArray[(int)(randomMilliseconds() % sampleSize)]++;
             }
         }
-        for (int i = 0; i < sampleSize; i++)
-        {
+        for (int i = 0; i < sampleSize; i++) {
             System.out.println(distArray[i]);
         }
     }

@@ -26,7 +26,7 @@ public class MovePiece {
     }
 
 
-    public static String whitePossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean WQC, boolean WKC){
+    public static String whitePossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean WCQ, boolean WCK){
         NOT_ENEMY_PIECES = ~(WP|WN|WB|WR|WQ|WK|BK);
         ENEMY_PIECES = BP | BN | BB | BR | BQ ;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
@@ -38,12 +38,12 @@ public class MovePiece {
         possibleMoves.append(QPossibleMoves(WQ));
         possibleMoves.append(NPossibleMoves(WN));
         possibleMoves.append(KPossibleMoves(WK));
-        possibleMoves.append(WKCastle(WR, WQC, WKC));
+        possibleMoves.append(WCKastle(WR, WCQ, WCK));
         return possibleMoves.toString();
     }
 
 
-    public static String blackPossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean BQC, boolean BKC){
+    public static String blackPossibleMoves(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK, long EP, boolean BCQ, boolean BCK){
         NOT_ENEMY_PIECES = ~(BP|BN|BB|BR|BQ|BK|WK);
         ENEMY_PIECES = WP | WN |WB | WR | WQ;
         EMPTY = ~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
@@ -55,7 +55,7 @@ public class MovePiece {
         possibleMoves.append(QPossibleMoves(BQ));
         possibleMoves.append(NPossibleMoves(BN));
         possibleMoves.append(KPossibleMoves(BK));
-        possibleMoves.append(BKCastle(BR, BQC, BKC));
+        possibleMoves.append(BCKastle(BR, BCQ, BCK));
 //        System.out.println(BPPossibleMoves(BP, EP, WP));
 //        System.out.println(possibleMoves.toString());
         return possibleMoves.toString();
@@ -379,14 +379,14 @@ public class MovePiece {
     }
 
 
-    public static String WKCastle(long WR, boolean WQC, boolean WKC){
+    public static String WCKastle(long WR, boolean WCQ, boolean WCK){
         StringBuilder list = new StringBuilder();
-        if (WKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[0]) & WR) != 0){
+        if (WCK && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[0]) & WR) != 0){
             if (( OCCUPIED & ((1L<<2) | (1L<<1)) ) == 0){
                 list.append("7476,");
             }
         }
-        if (WQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[1]) & WR) != 0){
+        if (WCQ && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[1]) & WR) != 0){
             if (( OCCUPIED & ((1L<<4) | (1L<<5) | (1L<<6)) ) == 0){
                 list.append("7472,");
             }
@@ -395,14 +395,14 @@ public class MovePiece {
     }
 
 
-    public static String BKCastle(long BR, boolean BQC, boolean BKC){
+    public static String BCKastle(long BR, boolean BCQ, boolean BCK){
         StringBuilder list = new StringBuilder();
-        if (BKC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[2]) & BR) != 0){
+        if (BCK && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[2]) & BR) != 0){
             if ((OCCUPIED & ((1L << 57) | (1L<<58)) ) == 0) {
                 list.append("0406,");
             }
         }
-        if (BQC && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[3]) & BR) != 0){
+        if (BCQ && ((1L << BitBoards.ROOK_STARTING_LOCATIONS[3]) & BR) != 0){
             if ((OCCUPIED & ((1L<<60) | (1L<<61) |( 1L<<62)) ) == 0){
                 list.append("0402,");
             }

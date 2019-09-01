@@ -91,52 +91,52 @@ public class Board {
     }
 
     public static void importFEN(String fen){
-        UserInterface.WP=0; UserInterface.WN=0; UserInterface.WB=0;
-        UserInterface.WR=0; UserInterface.WQ=0; UserInterface.WK=0;
-        UserInterface.BP=0; UserInterface.BN=0; UserInterface.BB=0;
-        UserInterface.BR=0; UserInterface.BQ=0; UserInterface.BK=0;
-        UserInterface.WCK=false; UserInterface.WCQ=false;
-        UserInterface.BCK=false; UserInterface.BCQ=false;
+        Engine.WP=0; Engine.WN=0; Engine.WB=0;
+        Engine.WR=0; Engine.WQ=0; Engine.WK=0;
+        Engine.BP=0; Engine.BN=0; Engine.BB=0;
+        Engine.BR=0; Engine.BQ=0; Engine.BK=0;
+        Engine.WCK=false; Engine.WCQ=false;
+        Engine.BCK=false; Engine.BCQ=false;
 
         int index = 0;
         int board = 0;
         while (fen.charAt(index) != ' '){
             switch (fen.charAt(index++)){
                 case 'P':
-                    UserInterface.WP |= (1L << (63-board++));
+                    Engine.WP |= (1L << (63-board++));
                     break;
                 case 'N':
-                    UserInterface.WN |= (1L << (63 - board++));
+                    Engine.WN |= (1L << (63 - board++));
                     break;
                 case 'B':
-                    UserInterface.WB |= (1L << (63 - board++));
+                    Engine.WB |= (1L << (63 - board++));
                     break;
                 case 'R':
-                    UserInterface.WR |= (1L << (63 - board++));
+                    Engine.WR |= (1L << (63 - board++));
                     break;
                 case 'Q':
-                    UserInterface.WQ |= (1L << (63 - board++));
+                    Engine.WQ |= (1L << (63 - board++));
                     break;
                 case 'K':
-                    UserInterface.WK |= (1L << (63 - board++));
+                    Engine.WK |= (1L << (63 - board++));
                     break;
                 case 'p':
-                    UserInterface.BP |= (1L << (63 - board++));
+                    Engine.BP |= (1L << (63 - board++));
                     break;
                 case 'n':
-                    UserInterface.BN |= (1L << (63 - board++));
+                    Engine.BN |= (1L << (63 - board++));
                     break;
                 case 'b':
-                    UserInterface.BB |= (1L << (63 - board++));
+                    Engine.BB |= (1L << (63 - board++));
                     break;
                 case 'r':
-                    UserInterface.BR |= (1L << (63 - board++));
+                    Engine.BR |= (1L << (63 - board++));
                     break;
                 case 'q':
-                    UserInterface.BQ |= (1L << (63 - board++));
+                    Engine.BQ |= (1L << (63 - board++));
                     break;
                 case 'k':
-                    UserInterface.BK |= (1L << (63 - board++));
+                    Engine.BK |= (1L << (63 - board++));
                     break;
                 case '/':
                     break;
@@ -167,7 +167,22 @@ public class Board {
                 default:  break;
             }
         }
-        generateVisualBoard(UserInterface.WP, UserInterface.WN, UserInterface.WB, UserInterface.WR, UserInterface.WQ, UserInterface.WK, UserInterface.BP, UserInterface.BN, UserInterface.BB, UserInterface.BR, UserInterface.BQ, UserInterface.BK);
+        Engine.WhiteToMove = (fen.charAt(++index) == 'w');
+        index += 2;
+        while (fen.charAt(index) != ' '){
+            switch (fen.charAt(index++)){
+                case '-': break;
+                case 'K': Engine.WCK = true;
+                case 'Q': Engine.WCQ = true;
+                case 'k': Engine.BCK = true;
+                case 'q': Engine.BCQ = true;
+                default: break;
+            }
+        }
+        if (fen.charAt(++index) != '-'){
+            Engine.EP = BitBoards.FILE_MASKS[fen.charAt(index++) - 'a'];
+        }
+//        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
     }
 
     /*
