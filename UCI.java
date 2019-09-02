@@ -92,7 +92,6 @@ public class UCI {
         if (input.contains("perft ")){
             input = input.substring("perft ".length());
             try {
-                Board.importFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
                 Perft.perftRoot(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK, Engine.EP, Engine.WCQ, Engine.WCK, Engine.BCQ, Engine.BCK, Engine.WhiteToMove, 0, Integer.parseInt(input));
             } catch (NumberFormatException n){
                 System.out.println("Usage: go perft <depth>");
@@ -103,7 +102,7 @@ public class UCI {
                 System.out.println("System error: exiting now");
                 System.exit(0);
             }
-          }
+        }
     }
 
     public static void UCIPrint(){

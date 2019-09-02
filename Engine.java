@@ -7,6 +7,7 @@ public class Engine {
 //        Board.initializeBoard();
 //        Board.importFEN("r2q1rk1/pppb1pp1/2n1p2p/3n4/1bBP3B/P1N1PN2/1P3PPP/R2Q1RK1 w - -");
 //        RandomNumber.testDistribution();
+        Board.initializeBoard();
         UCI.startUCI();
     }
 }
