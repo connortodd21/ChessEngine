@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+
 public class Perft {
 
     public static String moveToAlgebra(String move) {
@@ -11,10 +13,14 @@ public class Perft {
 
     static int perftTotalMoveCounter=0;
     static int perftMoveCounter=0;
-    static int perftMaxDepth=6;
+    static int perftMaxDepth=0;
     static long startTime = 0;
 
-    public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WCQ, boolean WCK, boolean BCQ, boolean BCK, boolean WhiteToMove, int depth){
+    public static void perftRoot(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WCQ, boolean WCK, boolean BCQ, boolean BCK, boolean WhiteToMove, int depth, int maxDepth) throws InputMismatchException {
+        if (maxDepth <= 0){
+            throw new InputMismatchException();
+        }
+        perftMaxDepth = maxDepth;
         startTime = System.currentTimeMillis();
         String moves;
         if (WhiteToMove){
@@ -63,6 +69,7 @@ public class Perft {
             }
         }
         System.out.println("\ntotal: " + perftTotalMoveCounter);
+        perftTotalMoveCounter = 0;
         System.out.println("time: " + ((float) (System.currentTimeMillis() - startTime)/1000) + " seconds");
     }
 

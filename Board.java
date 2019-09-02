@@ -71,6 +71,12 @@ public class Board {
                 case "k": BK += binaryToLong(binary); break;
             }
         }
+        Engine.WP=WP; Engine.WN=WN; Engine.WB=WB;
+        Engine.WR=WR; Engine.WQ=WQ; Engine.WK=WK;
+        Engine.BP=BP; Engine.BN=BN; Engine.BB=BB;
+        Engine.BR=BR; Engine.BQ=BQ; Engine.BK=BK;
+        Engine.WCK=true; Engine.WCQ=true;
+        Engine.BCK=true; Engine.BCQ=true;
 //        ChessUtilities.printBitboard(MovePiece.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
 //        ChessUtilities.printBitboard(WK);
 //        String moves = MovePiece.whitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC);
@@ -82,7 +88,7 @@ public class Board {
 //        MovePiece.blackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, BQC, BKC);
 //        ChessUtilities.printBitboard(m.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
 //        ChessUtilities.printBitboard(m.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
-        Perft.perftRoot(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, true, 0);
+//        Perft.perftRoot(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WQC, WKC, BQC, BKC, true, 0);
 //        System.out.println(Perft.perftMoveCounter);
 //        long temp = MovePiece.makeMove(WP, "6050", 'P');
 //        ChessUtilities.printBitboard(temp);
@@ -182,8 +188,7 @@ public class Board {
         if (fen.charAt(++index) != '-'){
             Engine.EP = BitBoards.FILE_MASKS[fen.charAt(index++) - 'a'];
         }
-        System.out.println(Engine.WhiteToMove);
-        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
+//        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
     }
 
     /*

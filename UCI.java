@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class UCI {
@@ -6,7 +7,7 @@ public class UCI {
         while (true){
             System.out.print("> ");
             Scanner s = new Scanner(System.in);
-            String input = s.nextLine();
+            String input = s.nextLine().trim();
             if (input.equals("uci")){
                 UCI();
             }
@@ -88,11 +89,21 @@ public class UCI {
 
     public static void UCIGo(String input){
         input = input.substring("go ".length());
-        if (input.contains("perft")){
+        if (input.contains("perft ")){
             input = input.substring("perft ".length());
-            Perft.perftMaxDepth = Integer.parseInt(input);
-            Perft.perftRoot(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK, Engine.EP, Engine.WCQ, Engine.WCK, Engine.BCQ, Engine.BCK, Engine.WhiteToMove, 0);
-        }
+            try {
+                Board.importFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                Perft.perftRoot(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK, Engine.EP, Engine.WCQ, Engine.WCK, Engine.BCQ, Engine.BCK, Engine.WhiteToMove, 0, Integer.parseInt(input));
+            } catch (NumberFormatException n){
+                System.out.println("Usage: go perft <depth>");
+            } catch (InputMismatchException i){
+                System.out.println("Error: depth must be a positive number");
+            }
+            catch (Exception e){
+                System.out.println("System error: exiting now");
+                System.exit(0);
+            }
+          }
     }
 
     public static void UCIPrint(){
