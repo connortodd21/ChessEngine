@@ -97,8 +97,7 @@ public class UCI {
                 System.out.println("Usage: go perft <depth>");
             } catch (InputMismatchException i){
                 System.out.println("Error: depth must be a positive number");
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 System.out.println("System error: exiting now");
                 System.exit(0);
             }

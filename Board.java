@@ -188,6 +188,7 @@ public class Board {
         if (fen.charAt(++index) != '-'){
             Engine.EP = BitBoards.FILE_MASKS[fen.charAt(index++) - 'a'];
         }
+        System.out.println(boardToFen(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK, 0, true, true, true, true));
 //        generateVisualBoard(Engine.WP, Engine.WN, Engine.WB, Engine.WR, Engine.WQ, Engine.WK, Engine.BP, Engine.BN, Engine.BB, Engine.BR, Engine.BQ, Engine.BK);
     }
 
@@ -214,7 +215,7 @@ public class Board {
         WP, WN, WB, WR, WQ, WK:        bitboards for all white pieces
         BP, BN, BB, BR, BQ, BK:        bitboards for all black pieces
      */
-    public static void generateVisualBoard(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
+    public static String[][] generateVisualBoard(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK){
         String[][] board = new String[8][8];
         for (int i = 0; i < 64; i++) {
             board[i/8][i%8] = " ";
@@ -261,6 +262,7 @@ public class Board {
             }
         }
         printBoard(board);
+        return board;
     }
 
     public static void printEngineBoard(){
@@ -310,6 +312,33 @@ public class Board {
             }
         }
         printBoard(board);
+    }
+
+    public static String boardToFen(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean WQC, boolean WKC, boolean BQC, boolean BKC){
+        String [][] board = generateVisualBoard(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+        StringBuilder fen = new StringBuilder();
+        for (int i = 0; i < board.length; i++) {
+            int count = 0;
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j].equals(" ")) {
+                    count++;
+                }
+                else {
+                    if (count != 0){
+                        fen.append(count + "" + board[i][j]);
+                        count = 0;
+                    }
+                    else {
+                        fen.append(board[i][j]);
+                    }
+                }
+            }
+            if (count > 0){
+                fen.append(count);
+            }
+            fen.append("/");
+        }
+        return fen.toString();
     }
 
     /*
