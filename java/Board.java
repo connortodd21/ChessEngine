@@ -1,4 +1,4 @@
-/*
+package java;/*
     Generate a chess board in bitboard notation for a given position
  */
 

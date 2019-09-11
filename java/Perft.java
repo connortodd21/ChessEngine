@@ -1,3 +1,5 @@
+package java;
+
 import java.util.InputMismatchException;
 
 public class Perft {

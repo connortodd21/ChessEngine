@@ -1,3 +1,5 @@
+package java;
+
 import java.security.SecureRandom;
 
 public class RandomNumber {

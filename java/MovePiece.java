@@ -1,3 +1,5 @@
+package java;
+
 public class MovePiece {
     /* Bitboards to indicate different game states */
     static long NOT_ENEMY_PIECES;
